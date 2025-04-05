@@ -10,7 +10,7 @@
 
 Linked_list_node_t *linked_list_node_create(void *data, void (*data_destroy_function)(void *))
 {
-    Linked_list_node_t *new_node = malloc(sizeof(Linked_list_node_t));
+    Linked_list_node_t *new_node = (Linked_list_node_t *)malloc(sizeof(Linked_list_node_t));
 
     if (!new_node)
         return NULL;

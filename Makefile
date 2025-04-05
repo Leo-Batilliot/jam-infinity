@@ -5,7 +5,7 @@
 ## Makefile
 ##
 
-CC              		= 	gcc
+CC              		= 	g++
 
 NAME         			= 	Infinity
 
@@ -14,18 +14,21 @@ TEST            		= 	units_tests
 CFLAGS          		= 	-Wall -Wextra -Werror -Iinclude -g
 TEST_CFLAGS     		= 	--coverage -lcriterion
 
-INCLUDE_FLAGS        	= 	-I include/
+INCLUDE_FLAGS        	= 	-I include/ -I include/display
 
-SRC		          		= 	src/main.c 										\
-						 	src/linked_list/create_node.c 					\
-						 	src/linked_list/pop_in_linked_list.c 			\
-						 	src/linked_list/create_linked_list.c 			\
-						 	src/linked_list/add_in_linked_list.c 			\
-						 	src/linked_list/destroy_linked_list.c 			\
-						 	src/linked_list/handle_current_linked_list.c 	\
-							src/algo.c 										\
+SRC		          		= 	src/main.cpp 									\
+						 	src/linked_list/create_node.cpp 				\
+						 	src/linked_list/pop_in_linked_list.cpp 			\
+						 	src/linked_list/create_linked_list.cpp 			\
+						 	src/linked_list/add_in_linked_list.cpp 			\
+						 	src/linked_list/destroy_linked_list.cpp 		\
+						 	src/linked_list/handle_current_linked_list.cpp 	\
+							src/algo.cpp 									\
+							src/display/Display.cpp 						\
 
-OBJ          			= 	$(SRC:%.c=obj/%.o)
+OBJ          			= 	$(SRC:%.cpp=obj/%.o)
+
+LIBSFML_FLAGS 			= 	-lsfml-graphics -lsfml-window -lsfml-system
 
 RED    = \033[1;31m
 GREEN  = \033[1;32m
@@ -37,14 +40,14 @@ all: obj $(NAME)
 obj:
 	@mkdir -p obj
 
-obj/%.o: %.c | obj
+obj/%.o: %.cpp | obj
 	@echo -e "$(GREEN)Compiling $<...$(NC)"
 	@mkdir -p $(dir $@)
 	@$(CC) -c $< -o $@ $(CFLAGS) $(INCLUDE_FLAGS)
 
 $(NAME): $(OBJ)
 	@echo -e "$(BLUE)Linking $(NAME)...$(NC)"
-	@$(CC) $(CFLAGS) $(INCLUDE_FLAGS) $^ -o $(NAME)
+	@$(CC) $(LIBSFML_FLAGS) $(CFLAGS) $(INCLUDE_FLAGS) $^ -o $(NAME)
 
 unit_test: $(TEST_OBJ)
 	@echo -e "$(BLUE)Compiling unit tests...$(NC)"
