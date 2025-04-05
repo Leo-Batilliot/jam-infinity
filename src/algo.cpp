@@ -26,15 +26,14 @@ void algo(infinity_t *main_struct)
 
         node->pos += node->speed;
         if (node->pos >= 100 && node->level < 100) {
-                node->pos = 0;
-                // exemple pour tester
-                node->level += 2;
-                t = (float)node->level / 100.0f;
-                node->speed = 1.0f + (9 - node->index) * (t * 0.5f + t * t * 0.5f);
-                node->coeff += 0.01;
-                main_struct->money_tot = 1;
-                gettimeofday(&node->timer, NULL);
-                int j = 0;
+            node->pos = 0;
+            // exemple pour tester
+            node->level += 2;
+            t = (float)node->level / 100.0f;
+            node->speed = 1.0f + (9 - node->index) * (t * 0.5f + t * t * 0.5f);
+            node->coeff += 0.01;
+            main_struct->money_tot = 1;
+            int j = 0;
             do {
                 truc_t *tmp_node = (truc_t *)linked_list_get_data(main_struct->head);
                 main_struct->money_tot *= tmp_node->coeff;

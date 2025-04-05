@@ -19,12 +19,10 @@
 
 typedef struct truc_s {
     float pos;
-    float start;
     float coeff;
     int index;
     float speed;
     int level;
-    struct timeval timer;
 } truc_t;
 
 typedef struct infinity_s {
