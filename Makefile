@@ -48,7 +48,7 @@ obj/%.o: %.cpp | obj
 
 $(NAME): $(OBJ)
 	@echo -e "$(BLUE)Linking $(NAME)...$(NC)"
-	@$(CC) $(LIBSFML_FLAGS) $(CFLAGS) $(INCLUDE_FLAGS) $^ -o $(NAME)
+	@$(CC) $^ -o $(NAME) $(LIBSFML_FLAGS) $(CFLAGS) $(INCLUDE_FLAGS)
 
 unit_test: $(TEST_OBJ)
 	@echo -e "$(BLUE)Compiling unit tests...$(NC)"

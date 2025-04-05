@@ -92,12 +92,16 @@ std::pair<std::vector<sf::Sprite>, std::vector<sf::Sprite>> initSpritePortaux(st
 
 void Display::Run(infinity_t *main_struct)
 {
+    sf::Clock clock;
     std::vector<std::shared_ptr<sf::Texture>>  textures = initTextureObject();
     std::vector<std::shared_ptr<sf::Texture>> textures_portaux = initTexturePortaux();
     std::vector<sf::Sprite> sprites = initSprite(textures[0]);
     std::pair<std::vector<sf::Sprite>, std::vector<sf::Sprite>> portails = initSpritePortaux(textures_portaux);
 
     while (true) {
+        if (clock.getElapsedTime().asSeconds() < 1.0 / 60.0)
+            continue;
+        clock.restart();
         algo(main_struct);
         this->_window->clear();
         while (this->_window->pollEvent(this->_event))
