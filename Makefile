@@ -23,6 +23,7 @@ SRC		          		= 	src/main.c 										\
 						 	src/linked_list/add_in_linked_list.c 			\
 						 	src/linked_list/destroy_linked_list.c 			\
 						 	src/linked_list/handle_current_linked_list.c 	\
+							src/algo.c 										\
 
 OBJ          			= 	$(SRC:%.c=obj/%.o)
 

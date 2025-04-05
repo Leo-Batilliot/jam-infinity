@@ -9,32 +9,20 @@
 #include <stdlib.h>
 #include <stddef.h>
 
+#include "project.h"
 #include "linked_list.h"
-
-typedef struct truc_s {
-    int caca;
-} truc_t;
 
 int main(void)
 {
-    linked_list_t *list = linked_list_create();
-    truc_t *a = malloc(sizeof(truc_t));
-    truc_t *b = malloc(sizeof(truc_t));
-    truc_t *c = malloc(sizeof(truc_t));
-    truc_t *d = malloc(sizeof(truc_t));
+    infinity_t *main_struct = malloc(sizeof(infinity_t));
 
-    a->caca = 10;
-    b->caca = 69;
-    c->caca = 1000;
-    d->caca = 789465;
-    linked_list_add(list, a, free);
-    linked_list_add(list, b, free);
-    linked_list_add(list, c, free);
-    linked_list_add(list, d, free);
-
-    do {
-        printf("%i\n", ((truc_t *)linked_list_get_data(list))->caca);
-    } while (linked_list_next(list));
-    linked_list_destroy(list);
+    if (!main_struct)
+        return 84;
+    main_struct->head = linked_list_create();
+    if (!main_struct->head)
+        return 84;
+    algo(main_struct);
+    linked_list_destroy(main_struct->head);
+    free(main_struct);
     return 84;
 }
