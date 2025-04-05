@@ -5,7 +5,10 @@
 ** Display.hpp
 */
 
+#pragma once
+
 #include <memory>
+#include "project.h"
 #include <SFML/Graphics.hpp>
 
 class Display
