@@ -5,6 +5,7 @@
 ** Display.cpp
 */
 
+#include "project.h"
 #include "Display.hpp"
 
 Display::Display()
@@ -52,12 +53,13 @@ std::vector<sf::Sprite> initSprite(std::shared_ptr<sf::Texture> texture)
     return sprites;
 }
 
-void Display::Run()
+void Display::Run(infinity_t *main_struct)
 {
     std::vector<std::shared_ptr<sf::Texture>>  textures = initTexture();
     std::vector<sf::Sprite> sprite = initSprite(textures[7]);
 
     while (true) {
+        algo(main_struct);
         this->_window->clear();
         while (this->_window->pollEvent(this->_event))
             if (this->_event.type == sf::Event::Closed)

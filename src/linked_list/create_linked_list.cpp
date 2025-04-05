@@ -10,7 +10,7 @@
 
 linked_list_t *linked_list_create(void)
 {
-    linked_list_t *linked_list = malloc(sizeof(linked_list_t));
+    linked_list_t *linked_list = (linked_list_t *)malloc(sizeof(linked_list_t));
 
     if (!linked_list)
         return NULL;
