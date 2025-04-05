@@ -113,11 +113,12 @@ void Display::Run(infinity_t *main_struct)
             sprites[index].setPosition({170 + node->pos * 14, sprites[index].getPosition().y});
             index++;
         } while (linked_list_next(main_struct->head));
+        this->_window->draw(this->_ui.getBackground());
+        this->_window->draw(this->_ui.getTopBackground());
         for (int i = 0; i < 9; i++) {
             this->_window->draw(portails.first[i]);
             this->_window->draw(sprites[i]);
             this->_window->draw(portails.second[i]);
-            this->_window->draw(this->_ui.getBackground());
         }
         this->_window->display();
     }

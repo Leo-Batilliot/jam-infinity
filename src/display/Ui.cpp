@@ -11,6 +11,7 @@
 Ui::Ui()
 {
     _topBackground = initSquare(sf::Vector2f(0, 0), sf::Color(37, 37, 60, 255), sf::Vector2f(1920, 200));
+    _background = initSquare(sf::Vector2f(150, 200), sf::Color(10, 10, 70, 255), sf::Vector2f(1530, 820));
 }
 
 Ui::~Ui()
@@ -31,7 +32,12 @@ void Ui::display(sf::RenderWindow *window)
     window->draw(_topBackground);
 }
 
-sf::RectangleShape Ui::getBackground() const
+sf::RectangleShape Ui::getTopBackground() const
 {
     return _topBackground;
+}
+
+sf::RectangleShape Ui::getBackground() const
+{
+    return _background;
 }
