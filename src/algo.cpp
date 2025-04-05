@@ -34,5 +34,4 @@ void algo(infinity_t *main_struct)
             } while (linked_list_next(main_struct->head));
         }
     } while (linked_list_next(main_struct->head));
-    printf("%f\n", main_struct->money_tot);
 }

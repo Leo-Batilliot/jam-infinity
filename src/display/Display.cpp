@@ -20,7 +20,7 @@ Display::~Display()
     this->_window->close();
 }
 
-std::vector<std::shared_ptr<sf::Texture>> initTexture()
+std::vector<std::shared_ptr<sf::Texture>> initTextureObject()
 {
     std::vector<std::shared_ptr<sf::Texture>> textures(8);
     for (auto& tex : textures)
@@ -37,26 +37,63 @@ std::vector<std::shared_ptr<sf::Texture>> initTexture()
     return textures;
 }
 
+std::vector<std::shared_ptr<sf::Texture>> initTexturePortaux()
+{
+    std::vector<std::shared_ptr<sf::Texture>> textures(2);
+
+    textures[0] = std::make_shared<sf::Texture>();
+    textures[1] = std::make_shared<sf::Texture>();
+    textures[0]->loadFromFile("assets/Hidari_no_potaru.png");
+    textures[1]->loadFromFile("assets/Migi_no_potaru.png");
+    return textures;
+}
+
 std::vector<sf::Sprite> initSprite(std::shared_ptr<sf::Texture> texture)
 {
     std::vector<sf::Sprite> sprites(9);
-
+    std::vector<sf::Color> colors = {
+        sf::Color(175, 0, 0),
+        sf::Color(255, 165, 0),
+        sf::Color(255, 255, 0),
+        sf::Color(57, 255, 57),
+        sf::Color(57, 255, 255),
+        sf::Color(27, 30, 219),
+        sf::Color(150, 31, 122),
+        sf::Color(233, 31, 220)
+    };
     sprites[0].setTexture(texture.get()[0]);
     sprites[0].setPosition({170, 910});
     sprites[0].scale({0.09, 0.09});
-
     for (int i = 1; i < 9; i++) {
         sprites[i].setTexture(texture.get()[0]);
         sprites[i].scale({0.09, 0.09});
         sprites[i].setPosition({170, sprites[i - 1].getPosition().y - 85});
+        sprites[i].setColor(colors[i - 1]);
     }
     return sprites;
 }
 
+std::pair<std::vector<sf::Sprite>, std::vector<sf::Sprite>> initSpritePortaux(std::vector<std::shared_ptr<sf::Texture>> texture_portaux)
+{
+    std::vector<sf::Sprite> portails_left(9);
+    std::vector<sf::Sprite> portails_right(9);
+    for (int i = 0; i < 9; i++) {
+        portails_left[i].setTexture(texture_portaux[0].get()[0]);
+        portails_left[i].scale({0.09, 0.09});
+        portails_left[i].setPosition(130, static_cast<float>(910 - (i * 85)));
+        portails_right[i].setTexture(texture_portaux[1].get()[0]);
+        portails_right[i].scale({0.09, 0.09});
+        portails_right[i].setPosition(1600.0, static_cast<float>(910 - (i * 85)));
+    }
+    return {portails_left, portails_right};
+}
+
 void Display::Run(infinity_t *main_struct)
 {
-    std::vector<std::shared_ptr<sf::Texture>>  textures = initTexture();
-    std::vector<sf::Sprite> sprite = initSprite(textures[7]);
+    std::vector<std::shared_ptr<sf::Texture>>  textures = initTextureObject();
+    std::vector<std::shared_ptr<sf::Texture>> textures_portaux = initTexturePortaux();
+    std::vector<sf::Sprite> sprite = initSprite(textures[0]);
+    std::pair<std::vector<sf::Sprite>, std::vector<sf::Sprite>> portails = initSpritePortaux(textures_portaux);
 
     while (true) {
         algo(main_struct);
@@ -64,8 +101,11 @@ void Display::Run(infinity_t *main_struct)
         while (this->_window->pollEvent(this->_event))
             if (this->_event.type == sf::Event::Closed)
                 return;
-        for (int i = 0; i < 9; i++)
+        for (int i = 0; i < 9; i++) {
+            this->_window->draw(portails.first[i]);
             this->_window->draw(sprite[i]);
+            this->_window->draw(portails.second[i]);
+        }
         this->_window->display();
     }
 }
