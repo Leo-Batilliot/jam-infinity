@@ -22,10 +22,10 @@ void algo(infinity_t *main_struct)
 
     do {
         truc_t *node = (truc_t *)linked_list_get_data(main_struct->head);
-        long elapsed = get_time_in_ms(&node->timer);
 
-        node->pos = ((float)elapsed / (float)(node->start * 1000)) * 100 * node->speed;
+        node->pos += node->speed;
         if (node->pos >= 100) {
+            node->pos = 0;
             // exemple pour tester
             node->level += 2;
             node->speed = 1.0f + (node->level - 1) * 0.5f;
