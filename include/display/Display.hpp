@@ -9,6 +9,7 @@
 
 #include <memory>
 #include "project.h"
+#include "Ui.hpp"
 #include <SFML/Graphics.hpp>
 
 class Display
@@ -19,6 +20,7 @@ class Display
 
         void Run(infinity_t *main_struct);
     private:
-        std::unique_ptr<sf::RenderWindow> _window;
+        Ui _ui;
+        std::shared_ptr<sf::RenderWindow> _window;
         sf::Event _event;
 };

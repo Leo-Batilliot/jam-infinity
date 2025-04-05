@@ -7,12 +7,14 @@
 
 #include "project.h"
 #include "Display.hpp"
+#include "Ui.hpp"
 
 Display::Display()
     :_window(nullptr)
 {
-    this->_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "Display", sf::Style::Default);
+    this->_window = std::make_shared<sf::RenderWindow>(sf::VideoMode(1920, 1080), "Display", sf::Style::Default);
     this->_window->setFramerateLimit(60);
+    this->_ui = Ui();
 }
 
 Display::~Display()
@@ -111,6 +113,7 @@ void Display::Run(infinity_t *main_struct)
             this->_window->draw(portails.first[i]);
             this->_window->draw(sprites[i]);
             this->_window->draw(portails.second[i]);
+            this->_window->draw(this->_ui.getBackground());
         }
         this->_window->display();
     }
