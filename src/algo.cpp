@@ -29,7 +29,6 @@ void algo(infinity_t *main_struct)
             // exemple pour tester
             node->level += 2;
             node->speed = 1.0f + (node->level - 1) * 0.5f;
-            node->start -= node->speed;
             node->coeff += 0.01;
             main_struct->money_tot = 1;
             gettimeofday(&node->timer, NULL);
