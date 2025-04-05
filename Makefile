@@ -25,6 +25,7 @@ SRC		          		= 	src/main.cpp 									\
 						 	src/linked_list/handle_current_linked_list.cpp 	\
 							src/algo.cpp 									\
 							src/display/Display.cpp 						\
+							src/display/Ui.cpp 								\
 
 OBJ          			= 	$(SRC:%.cpp=obj/%.o)
 
@@ -47,7 +48,7 @@ obj/%.o: %.cpp | obj
 
 $(NAME): $(OBJ)
 	@echo -e "$(BLUE)Linking $(NAME)...$(NC)"
-	@$(CC) $(LIBSFML_FLAGS) $(CFLAGS) $(INCLUDE_FLAGS) $^ -o $(NAME)
+	@$(CC) $^ -o $(NAME) $(LIBSFML_FLAGS) $(CFLAGS) $(INCLUDE_FLAGS)
 
 unit_test: $(TEST_OBJ)
 	@echo -e "$(BLUE)Compiling unit tests...$(NC)"
