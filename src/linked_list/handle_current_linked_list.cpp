@@ -11,7 +11,7 @@
 void linked_list_set_to_start(linked_list_t *linked_list)
 {
     if (linked_list->current)
-        linked_list->start = linked_list->current;
+        linked_list->current = linked_list->start;
     linked_list->current_index = 0;
 }
 
