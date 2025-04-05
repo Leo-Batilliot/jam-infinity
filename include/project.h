@@ -22,6 +22,8 @@ typedef struct truc_s {
     float start;
     float coeff;
     int index;
+    float speed;
+    int level;
     struct timeval timer;
 } truc_t;
 
