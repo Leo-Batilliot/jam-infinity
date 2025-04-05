@@ -26,8 +26,6 @@ void algo(infinity_t *main_struct)
         node->pos += node->speed;
         if (node->pos >= 100) {
             node->pos = 0;
-            // exemple pour tester
-            node->level += 2;
             node->speed = 1.0f + (node->level - 1) * 0.5f;
             node->coeff += 0.01;
             main_struct->money_tot = 1;
@@ -37,7 +35,7 @@ void algo(infinity_t *main_struct)
                 truc_t *tmp_node = (truc_t *)linked_list_get_data(main_struct->head);
                 main_struct->money_tot *= tmp_node->coeff;
                 j++;
-            } while (linked_list_next(main_struct->head) && j < main_struct->is_buy);
+            } while (linked_list_next(main_struct->head) && j < main_struct->is_buy && node->level > 0);
         }
         i++;
     } while (linked_list_next(main_struct->head) && i < main_struct->is_buy);

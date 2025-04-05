@@ -26,7 +26,8 @@ class Display
         std::vector<std::pair<sf::Sprite, sf::Sprite>> initSpritePortaux(std::vector<std::shared_ptr<sf::Texture>> texture_portaux);
 
         void drawObject(infinity_t *main_struct);
-        bool checkEvent();
+        bool checkEvent(infinity_t *main_struct);
+        void checkButton(infinity_t *main_struct);
     
     private:
         Ui _ui;
@@ -34,7 +35,7 @@ class Display
         sf::Event _event;
         std::shared_ptr<sf::RenderWindow> _window;
 
-        std::vector<std::pair<sf::RectangleShape, infinity_t *>> _object;
+        std::vector<std::pair<sf::RectangleShape, truc_t *>> _object;
 
         std::vector<sf::Sprite> _sprites;
         std::vector<std::shared_ptr<sf::Texture>> _textures;

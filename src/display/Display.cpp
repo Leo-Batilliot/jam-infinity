@@ -5,9 +5,9 @@
 ** Display.cpp
 */
 
+#include "Ui.hpp"
 #include "project.h"
 #include "Display.hpp"
-#include "Ui.hpp"
 
 Display::Display()
     :_window(nullptr)
@@ -21,9 +21,9 @@ Display::Display()
     this->_sprites = initSprite(this->_textures[0]);
     this->_portails = initSpritePortaux(this->_textures_portaux);
 
-    this->_object = std::vector<std::pair<sf::RectangleShape, infinity_t *>>(9);
+    this->_object = std::vector<std::pair<sf::RectangleShape, truc_t *>>(9);
     for (int i = 0; i < 9; i++) {
-        this->_object[i].first = this->_ui.initSquare(sf::Vector2f(170, 910 - (i * 85)), sf::Color(0, 0, 0, 0), sf::Vector2f(100, 100));
+        this->_object[i].first = this->_ui.initSquare(sf::Vector2f(30, 910 - (i * 85)), sf::Color(0, 255, 0, 255), sf::Vector2f(80, 80));
         this->_object[i].second = nullptr;
     }
 }
@@ -128,13 +128,28 @@ void Display::drawObject(infinity_t *main_struct)
     this->_window->display();
 }
 
-bool Display::checkEvent()
+void Display::checkButton(infinity_t *main_struct)
+{
+    for (int i = 0; i < 9; i++) {
+        if (_object[i].first.getGlobalBounds().contains(this->_event.mouseButton.x, this->_event.mouseButton.y)) {
+            if (i <= main_struct->is_buy) {
+                _object[i].second->level++;
+            }
+            else if (i == main_struct->is_buy + 1) {
+                main_struct->is_buy++;
+                _object[i].second->level++;
+            }
+        }
+    }
+}
+
+bool Display::checkEvent(infinity_t *main_struct)
 {
     if (this->_event.type == sf::Event::Closed)
         return false;
     if (this->_event.type == sf::Event::MouseButtonPressed) {
         if (this->_event.mouseButton.button == sf::Mouse::Left) {
-            // quand je vais faire les clicks pour les bouttons 
+            checkButton(main_struct);
         }
     }
     return true;
@@ -146,17 +161,20 @@ void Display::Run(infinity_t *main_struct)
 
     do {
         truc_t *node = (truc_t *)linked_list_get_data(main_struct->head);
-        _object[node->index - 1].second = reinterpret_cast<infinity_t *>(node);
+        _object[node->index - 1].second = node;
     } while (linked_list_next(main_struct->head));
 
-    while (true) {
+    while (_window->isOpen()) {
         if (clock.getElapsedTime().asSeconds() < 1.0 / 60.0)
             continue;
         clock.restart();
         algo(main_struct);
         while (this->_window->pollEvent(this->_event))
-            if (!this->checkEvent())
+            if (!this->checkEvent(main_struct))
                 return;
         this->drawObject(main_struct);
+        printf("level = %d\n", _object[0].second->level);
+        printf("level2 = %d\n", _object[1].second->level);
+        printf("is_buy = %d\n", main_struct->is_buy);
     }
 }
