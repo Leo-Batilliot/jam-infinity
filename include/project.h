@@ -27,6 +27,7 @@ typedef struct truc_s {
 
 typedef struct infinity_s {
     float money_tot;
+    int is_buy;
     linked_list_t *head;
 } infinity_t;
 
