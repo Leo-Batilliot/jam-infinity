@@ -18,21 +18,26 @@ long get_time_in_ms(struct timeval *start_time)
 
 void algo(infinity_t *main_struct)
 {
+    int i = 0;
+
     do {
         truc_t *node = (truc_t *)linked_list_get_data(main_struct->head);
         long elapsed = get_time_in_ms(&node->timer);
         float elapsed_seconds = (float)elapsed / 1000.0;
-        node->pos = ((float)elapsed / (float)(node->start * 1000)) * 100;
 
+        node->pos = ((float)elapsed / (float)(node->start * 1000)) * 100;
         if (elapsed_seconds >= node->start) {
+            node->coeff += 0.01;
             main_struct->money_tot = 1;
-            // récupérer value des coeffs coté front
             gettimeofday(&node->timer, NULL);
+            int j = 0;
             do {
-                truc_t *tmp = (truc_t *)linked_list_get_data(main_struct->head);
-                main_struct->money_tot *= tmp->coeff;
-            } while (linked_list_next(main_struct->head));
+                truc_t *tmp_node = (truc_t *)linked_list_get_data(main_struct->head);
+                main_struct->money_tot *= tmp_node->coeff;
+                j++;
+            } while (linked_list_next(main_struct->head) && j < main_struct->is_buy);
         }
-    } while (linked_list_next(main_struct->head));
-    printf("%f\n", main_struct->money_tot);
+        i++;
+    } while (linked_list_next(main_struct->head) && i < main_struct->is_buy);
+    linked_list_set_to_start(main_struct->head);
 }
