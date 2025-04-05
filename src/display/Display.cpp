@@ -15,6 +15,17 @@ Display::Display()
     this->_window = std::make_shared<sf::RenderWindow>(sf::VideoMode(1920, 1080), "Display", sf::Style::Default);
     this->_window->setFramerateLimit(60);
     this->_ui = Ui();
+
+    this->_textures = initTextureObject();
+    this->_textures_portaux = initTexturePortaux();
+    this->_sprites = initSprite(this->_textures[0]);
+    this->_portails = initSpritePortaux(this->_textures_portaux);
+
+    this->_object = std::vector<std::pair<sf::RectangleShape, infinity_t *>>(9);
+    for (int i = 0; i < 9; i++) {
+        this->_object[i].first = this->_ui.initSquare(sf::Vector2f(170, 910 - (i * 85)), sf::Color(0, 0, 0, 0), sf::Vector2f(100, 100));
+        this->_object[i].second = nullptr;
+    }
 }
 
 Display::~Display()
@@ -22,7 +33,7 @@ Display::~Display()
     this->_window->close();
 }
 
-std::vector<std::shared_ptr<sf::Texture>> initTextureObject()
+std::vector<std::shared_ptr<sf::Texture>> Display::initTextureObject()
 {
     std::vector<std::shared_ptr<sf::Texture>> textures(8);
     for (auto& tex : textures)
@@ -39,7 +50,7 @@ std::vector<std::shared_ptr<sf::Texture>> initTextureObject()
     return textures;
 }
 
-std::vector<std::shared_ptr<sf::Texture>> initTexturePortaux()
+std::vector<std::shared_ptr<sf::Texture>> Display::initTexturePortaux()
 {
     std::vector<std::shared_ptr<sf::Texture>> textures(2);
 
@@ -50,7 +61,7 @@ std::vector<std::shared_ptr<sf::Texture>> initTexturePortaux()
     return textures;
 }
 
-std::vector<sf::Sprite> initSprite(std::shared_ptr<sf::Texture> texture)
+std::vector<sf::Sprite> Display::initSprite(std::shared_ptr<sf::Texture> texture)
 {
     std::vector<sf::Sprite> sprites(9);
     std::vector<sf::Color> colors = {
@@ -75,7 +86,7 @@ std::vector<sf::Sprite> initSprite(std::shared_ptr<sf::Texture> texture)
     return sprites;
 }
 
-std::pair<std::vector<sf::Sprite>, std::vector<sf::Sprite>> initSpritePortaux(std::vector<std::shared_ptr<sf::Texture>> texture_portaux)
+std::vector<std::pair<sf::Sprite, sf::Sprite>> Display::initSpritePortaux(std::vector<std::shared_ptr<sf::Texture>> texture_portaux)
 {
     std::vector<sf::Sprite> portails_left(9);
     std::vector<sf::Sprite> portails_right(9);
@@ -87,39 +98,65 @@ std::pair<std::vector<sf::Sprite>, std::vector<sf::Sprite>> initSpritePortaux(st
         portails_right[i].scale({0.09, 0.09});
         portails_right[i].setPosition(1600.0, static_cast<float>(910 - (i * 85)));
     }
-    return {portails_left, portails_right};
+    std::vector<std::pair<sf::Sprite, sf::Sprite>> portails(9);
+    for (int i = 0; i < 9; i++) {
+        portails[i].first = portails_left[i];
+        portails[i].second = portails_right[i];
+    }
+    return portails;
+}
+
+void Display::drawObject(infinity_t *main_struct)
+{
+    this->_window->clear();
+    int index = 0;
+    do {
+        truc_t *node = (truc_t *)linked_list_get_data(main_struct->head);
+        _sprites[index].setPosition({170 + node->pos * 14, _sprites[index].getPosition().y});
+        index++;
+    } while (linked_list_next(main_struct->head));
+
+    this->_window->draw(this->_ui.getBackground());
+    this->_window->draw(this->_ui.getTopBackground());
+    for (int i = 0; i < 9; i++) {
+        this->_window->draw(_sprites[i]);
+        this->_window->draw(_portails[i].first);
+        this->_window->draw(_portails[i].second);
+        this->_window->draw(_object[i].first);
+
+    }
+    this->_window->display();
+}
+
+bool Display::checkEvent()
+{
+    if (this->_event.type == sf::Event::Closed)
+        return false;
+    if (this->_event.type == sf::Event::MouseButtonPressed) {
+        if (this->_event.mouseButton.button == sf::Mouse::Left) {
+            // quand je vais faire les clicks pour les bouttons 
+        }
+    }
+    return true;
 }
 
 void Display::Run(infinity_t *main_struct)
 {
     sf::Clock clock;
-    std::vector<std::shared_ptr<sf::Texture>>  textures = initTextureObject();
-    std::vector<std::shared_ptr<sf::Texture>> textures_portaux = initTexturePortaux();
-    std::vector<sf::Sprite> sprites = initSprite(textures[0]);
-    std::pair<std::vector<sf::Sprite>, std::vector<sf::Sprite>> portails = initSpritePortaux(textures_portaux);
+
+    do {
+        truc_t *node = (truc_t *)linked_list_get_data(main_struct->head);
+        _object[node->index - 1].second = reinterpret_cast<infinity_t *>(node);
+    } while (linked_list_next(main_struct->head));
 
     while (true) {
         if (clock.getElapsedTime().asSeconds() < 1.0 / 60.0)
             continue;
         clock.restart();
         algo(main_struct);
-        this->_window->clear();
         while (this->_window->pollEvent(this->_event))
-            if (this->_event.type == sf::Event::Closed)
+            if (!this->checkEvent())
                 return;
-        int index = 0;
-        do {
-            truc_t *node = (truc_t *)linked_list_get_data(main_struct->head);
-            sprites[index].setPosition({170 + node->pos * 14, sprites[index].getPosition().y});
-            index++;
-        } while (linked_list_next(main_struct->head));
-        this->_window->draw(this->_ui.getBackground());
-        this->_window->draw(this->_ui.getTopBackground());
-        for (int i = 0; i < 9; i++) {
-            this->_window->draw(portails.first[i]);
-            this->_window->draw(sprites[i]);
-            this->_window->draw(portails.second[i]);
-        }
-        this->_window->display();
+        this->drawObject(main_struct);
     }
 }
