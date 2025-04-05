@@ -23,13 +23,13 @@ void algo(infinity_t *main_struct)
     do {
         truc_t *node = (truc_t *)linked_list_get_data(main_struct->head);
         long elapsed = get_time_in_ms(&node->timer);
-        float elapsed_seconds = (float)elapsed / 1000.0;
 
         node->pos = ((float)elapsed / (float)(node->start * 1000)) * 100 * node->speed;
-        if (elapsed_seconds >= node->start) {
+        if (node->pos >= 100) {
             // exemple pour tester
             node->level += 2;
             node->speed = 1.0f + (node->level - 1) * 0.5f;
+            node->start -= node->speed;
             node->coeff += 0.01;
             main_struct->money_tot = 1;
             gettimeofday(&node->timer, NULL);
