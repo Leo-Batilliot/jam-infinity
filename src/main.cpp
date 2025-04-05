@@ -30,6 +30,8 @@ int main(void)
         if (!node)
             return 84;
         node->coeff = 1;
+        node->level = 1;
+        node->speed = 1;
         node->index = i + 1;
         node->start = 10 * node->index;
         gettimeofday(&node->timer, NULL);
