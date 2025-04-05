@@ -19,15 +19,18 @@ long get_time_in_ms(struct timeval *start_time)
 void algo(infinity_t *main_struct)
 {
     int i = 0;
+    float t = 0.0;
 
     do {
         truc_t *node = (truc_t *)linked_list_get_data(main_struct->head);
 
         node->pos += node->speed;
-        if (node->pos >= 100) {
+        if (node->pos >= 100 && node->level < 100) {
             node->pos = 0;
+            // exemple pour tester
             node->level += 2;
-            node->speed = 1.0f + (node->level - 1) * 0.5f;
+            t = (float)node->level / 100.0f;
+            node->speed = 1.0f + (9 - node->index) * (t * 0.5f + t * t * 0.5f);
             node->coeff += 0.01;
             main_struct->money_tot = 1;
             int j = 0;
