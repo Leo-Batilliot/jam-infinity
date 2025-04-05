@@ -16,7 +16,13 @@ TEST_CFLAGS     		= 	--coverage -lcriterion
 
 INCLUDE_FLAGS        	= 	-I include/
 
-SRC		          		= 	src/main.c 						\
+SRC		          		= 	src/main.c 										\
+						 	src/linked_list/create_node.c 					\
+						 	src/linked_list/pop_in_linked_list.c 			\
+						 	src/linked_list/create_linked_list.c 			\
+						 	src/linked_list/add_in_linked_list.c 			\
+						 	src/linked_list/destroy_linked_list.c 			\
+						 	src/linked_list/handle_current_linked_list.c 	\
 
 OBJ          			= 	$(SRC:%.c=obj/%.o)
 
@@ -28,7 +34,7 @@ NC     = \033[0m
 all: obj $(NAME)
 
 obj:
-	@mkdir -p obj/src
+	@mkdir -p obj
 
 obj/%.o: %.c | obj
 	@echo -e "$(GREEN)Compiling $<...$(NC)"
