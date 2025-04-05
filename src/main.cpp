@@ -33,8 +33,6 @@ int main(void)
         node->level = 1;
         node->speed = 1;
         node->index = i + 1;
-        node->start = 10 * node->index;
-        gettimeofday(&node->timer, NULL);
         node->pos = 1;
         linked_list_add(main_struct->head, node, free);
     }
