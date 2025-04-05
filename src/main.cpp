@@ -21,6 +21,7 @@ int main(void)
     if (!main_struct)
         return 84;
     main_struct->head = linked_list_create();
+    main_struct->is_buy = 0;
     if (!main_struct->head)
         return 84;
     main_struct->money_tot = 0;

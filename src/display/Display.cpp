@@ -92,7 +92,7 @@ void Display::Run(infinity_t *main_struct)
 {
     std::vector<std::shared_ptr<sf::Texture>>  textures = initTextureObject();
     std::vector<std::shared_ptr<sf::Texture>> textures_portaux = initTexturePortaux();
-    std::vector<sf::Sprite> sprite = initSprite(textures[0]);
+    std::vector<sf::Sprite> sprites = initSprite(textures[0]);
     std::pair<std::vector<sf::Sprite>, std::vector<sf::Sprite>> portails = initSpritePortaux(textures_portaux);
 
     while (true) {
@@ -101,9 +101,15 @@ void Display::Run(infinity_t *main_struct)
         while (this->_window->pollEvent(this->_event))
             if (this->_event.type == sf::Event::Closed)
                 return;
+        int index = 0;
+        do {
+            truc_t *node = (truc_t *)linked_list_get_data(main_struct->head);
+            sprites[index].setPosition({170 + node->pos * 14, sprites[index].getPosition().y});
+            index++;
+        } while (linked_list_next(main_struct->head));
         for (int i = 0; i < 9; i++) {
             this->_window->draw(portails.first[i]);
-            this->_window->draw(sprite[i]);
+            this->_window->draw(sprites[i]);
             this->_window->draw(portails.second[i]);
         }
         this->_window->display();
