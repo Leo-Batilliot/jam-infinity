@@ -30,6 +30,6 @@ typedef struct infinity_s {
     linked_list_t *head;
 } infinity_t;
 
-int algo(infinity_t *main_struct);
+void algo(infinity_t *main_struct);
 
 #endif /* !MY_H_ */

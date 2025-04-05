@@ -19,6 +19,7 @@ void linked_list_destroy(linked_list_t *linked_list)
         if (to_destroy->data_destroy_function && to_destroy->data)
             to_destroy->data_destroy_function(to_destroy->data);
         to_destroy->data = NULL;
+
         free(to_destroy);
     }
     free(linked_list);
