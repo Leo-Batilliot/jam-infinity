@@ -15,17 +15,25 @@ Display::Display()
     this->_window = std::make_shared<sf::RenderWindow>(sf::VideoMode(1920, 1080), "Infinity", sf::Style::Default);
     this->_window->setFramerateLimit(60);
     this->_ui = Ui();
+    this->_font.loadFromFile("assets/Monocraft.ttf");
 
     this->_textures = initTextureObject();
     this->_textures_portaux = initTexturePortaux();
     this->_sprites = initSprite(this->_textures[0]);
     this->_portails = initSpritePortaux(this->_textures_portaux);
 
-    this->_object = std::vector<std::pair<sf::VertexArray, truc_t *>>(9);
+    this->_object = std::vector<std::pair<std::pair<sf::VertexArray, std::vector<sf::Text>>, truc_t *>>(9);
     for (int i = 0; i < 9; i++) {
-        this->_object[i].first = this->_ui.createRoundedRectangle(
+        this->_object[i].first.first = this->_ui.createRoundedRectangle(
             sf::Vector2f(10, 910 - (i * 85)), sf::Vector2f(130, 80), 20,
             sf::Color(128, 163, 163, 255), 8);
+        this->_object[i].first.second = std::vector<sf::Text>(2);
+        this->_object[i].first.second[0] = sf::Text();
+        this->_object[i].first.second[0].setFont(this->_font);
+        this->_object[i].first.second[0].setCharacterSize(30);
+        this->_object[i].first.second[0].setFillColor(sf::Color(255, 255, 255, 255));
+        this->_object[i].first.second[0].setPosition(30, 910 - (i * 85));
+        
         this->_object[i].second = nullptr;
     }
 }
@@ -117,35 +125,43 @@ void Display::drawObject(infinity_t *main_struct)
     do {
         truc_t *node = (truc_t *)linked_list_get_data(main_struct->head);
         _sprites[index].setPosition({170 + node->pos * 14, _sprites[index].getPosition().y});
+        _object[index].first.second.setString(std::to_string(node->level - 1));
         index++;
     } while (linked_list_next(main_struct->head));
 
     this->_window->draw(this->_ui.getBackground());
     this->_window->draw(this->_ui.getTopBackground());
     for (int i = 0; i < 9; i++) {
-        this->_window->draw(_sprites[i]);
-        this->_window->draw(_portails[i].first);
-        this->_window->draw(_portails[i].second);
-        this->_window->draw(_object[i].first);
+        if (main_struct->is_buy >= i) {
+            this->_window->draw(_sprites[i]);
+            this->_window->draw(_portails[i].first);
+            this->_window->draw(_portails[i].second);
+            this->_window->draw(_object[i].first.first);
+            this->_window->draw(_object[i].first.second);
+        }
+        else if (main_struct->is_buy + 1 >= i) {
+            this->_window->draw(_object[i].first.first);
+            this->_window->draw(_object[i].first.second);
+        }
     }
     this->_window->display();
     for (int i = 0; i < 9; i++) {
-        _ui.changeColor(_object[i].first, sf::Color(128, 163, 163, 255));
+        _ui.changeColor(_object[i].first.first, sf::Color(128, 163, 163, 255));
     }
 }
 
 void Display::checkButton(infinity_t *main_struct)
 {
     for (int i = 0; i < 9; i++) {
-        if (_object[i].first.getBounds().contains(this->_event.mouseButton.x, this->_event.mouseButton.y)) {
+        if (_object[i].first.first.getBounds().contains(this->_event.mouseButton.x, this->_event.mouseButton.y)) {
             if (i <= main_struct->is_buy) {
-                _ui.changeColor(_object[i].first, sf::Color(0, 255, 0, 255));
+                _ui.changeColor(_object[i].first.first, sf::Color(0, 255, 0, 255));
                 _object[i].second->level++;
             }
             else if (i == main_struct->is_buy + 1) {
                 main_struct->is_buy++;
                 _object[i].second->level++;
-                _ui.changeColor(_object[i].first, sf::Color(0, 255, 0, 255));
+                _ui.changeColor(_object[i].first.first, sf::Color(0, 255, 0, 255));
             }
         }
     }

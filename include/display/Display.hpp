@@ -32,10 +32,11 @@ class Display
     private:
         Ui _ui;
 
+        sf::Font _font;
         sf::Event _event;
         std::shared_ptr<sf::RenderWindow> _window;
 
-        std::vector<std::pair<sf::VertexArray, truc_t *>> _object;
+        std::vector<std::pair<std::pair<sf::VertexArray, std::vector<sf::Text>>, truc_t *>> _object;
 
         std::vector<sf::Sprite> _sprites;
         std::vector<std::shared_ptr<sf::Texture>> _textures;
