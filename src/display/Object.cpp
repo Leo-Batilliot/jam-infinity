@@ -30,9 +30,9 @@ Object::Object(Ui &ui, sf::Font &font, int i)
     _level.setPosition(30, 910 - (i * 85));
     _mult = sf::Text();
     _mult.setFont(font);
-    _mult.setCharacterSize(30);
+    _mult.setCharacterSize(50);
     _mult.setFillColor(colors[i]);
-    _mult.setPosition(80 + i * 200, 50);
+    _mult.setPosition(100 + i * 200, 50);
 }
 
 Object::~Object()
