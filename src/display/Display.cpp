@@ -17,6 +17,7 @@ Display::Display()
     this->_ui = Ui();
 
     this->_textures = initTextureObject();
+    this->_soundBuffers = initSoundBuffer();
     this->_textures_portaux = initTexturePortaux();
     this->_sprites = initSprite(this->_textures[0]);
     this->_portails = initSpritePortaux(this->_textures_portaux);
@@ -48,6 +49,23 @@ std::vector<std::shared_ptr<sf::Texture>> Display::initTextureObject()
     textures[6]->loadFromFile("assets/Hikoki.png");
     textures[7]->loadFromFile("assets/Fenikkusu.png");
     return textures;
+}
+
+std::vector<std::shared_ptr<sf::SoundBuffer>> Display::initSoundBuffer()
+{
+    std::vector<std::shared_ptr<sf::SoundBuffer>> soundBuffers(8);
+    for (auto& tex : soundBuffers)
+        tex = std::make_shared<sf::SoundBuffer>();
+
+    soundBuffers[0]->loadFromFile("assets/Schnecke.wav");
+    soundBuffers[1]->loadFromFile("assets/Schrittgeräusch.wav");
+    soundBuffers[2]->loadFromFile("assets/Hund.wav");
+    soundBuffers[3]->loadFromFile("assets/Radfahrer.wav");
+    soundBuffers[4]->loadFromFile("assets/Auto.wav");
+    soundBuffers[5]->loadFromFile("assets/Zug.wav");
+    soundBuffers[6]->loadFromFile("assets/Flugzeug.wav");
+    soundBuffers[7]->loadFromFile("assets/Phönix.wav");
+    return soundBuffers;
 }
 
 std::vector<std::shared_ptr<sf::Texture>> Display::initTexturePortaux()
@@ -123,7 +141,6 @@ void Display::drawObject(infinity_t *main_struct)
         this->_window->draw(_portails[i].first);
         this->_window->draw(_portails[i].second);
         this->_window->draw(_object[i].first);
-
     }
     this->_window->display();
 }

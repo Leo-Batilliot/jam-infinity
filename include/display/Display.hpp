@@ -24,6 +24,7 @@ class Display
 
         std::vector<std::shared_ptr<sf::Texture>> initTextureObject();
         std::vector<std::shared_ptr<sf::Texture>> initTexturePortaux();
+        std::vector<std::shared_ptr<sf::SoundBuffer>> initSoundBuffer();
         std::vector<sf::Sprite> initSprite(std::shared_ptr<sf::Texture> texture);
         std::vector<std::pair<sf::Sprite, sf::Sprite>> initSpritePortaux(std::vector<std::shared_ptr<sf::Texture>> texture_portaux);
 
@@ -40,6 +41,7 @@ class Display
 
         std::vector<sf::Sprite> _sprites;
         std::vector<std::shared_ptr<sf::Texture>> _textures;
+        std::vector<std::shared_ptr<sf::SoundBuffer>> _soundBuffers;
         std::vector<std::pair<sf::Sprite, sf::Sprite>> _portails;
         std::vector<std::shared_ptr<sf::Texture>> _textures_portaux;
 };
