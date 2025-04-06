@@ -210,13 +210,12 @@ void Display::checkButton(infinity_t *main_struct)
             if (i <= main_struct->is_buy) {
                 _ui.changeColor(button, sf::Color(0, 255, 0, 255));
                 _object[i].getObject()->level++;
-            }
-            else if (i == main_struct->is_buy + 1) {
+            } else if (i == main_struct->is_buy + 1) {
                 main_struct->is_buy++;
                 _object[i].getObject()->level++;
                 _ui.changeColor(button, sf::Color(0, 255, 0, 255));
-                _object[i].getObject()->speed = get_speed(_object[i].getObject()->index, _object[i].getObject()->level);
             }
+            _object[i].getObject()->speed = get_speed(_object[i].getObject()->index, _object[i].getObject()->level);
         }
         linked_list_next(main_struct->head);
     }

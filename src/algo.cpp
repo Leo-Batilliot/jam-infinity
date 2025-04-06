@@ -39,7 +39,6 @@ void algo(infinity_t *main_struct)
             node->state = node->state > 7 ? 7 : node->state;
             if (last_state != node->state)
                 node->state_change = true;
-            printf("%i : %i\n", node->level, node->state);
             main_struct->money_tot += get_cur_money(main_struct);
         }
         i++;
