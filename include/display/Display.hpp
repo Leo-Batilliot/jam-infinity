@@ -8,9 +8,12 @@
 #pragma once
 
 #include <memory>
-#include "project.h"
-#include "Ui.hpp"
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
+#include "Object.hpp"
+
+#include "Ui.hpp"
+#include "project.h"
 
 class Display
 {
@@ -22,6 +25,7 @@ class Display
 
         std::vector<std::shared_ptr<sf::Texture>> initTextureObject();
         std::vector<std::shared_ptr<sf::Texture>> initTexturePortaux();
+        std::vector<std::shared_ptr<sf::SoundBuffer>> initSoundBuffer();
         std::vector<sf::Sprite> initSprite(std::shared_ptr<sf::Texture> texture);
         std::vector<std::pair<sf::Sprite, sf::Sprite>> initSpritePortaux(std::vector<std::shared_ptr<sf::Texture>> texture_portaux);
 
@@ -32,13 +36,16 @@ class Display
     private:
         Ui _ui;
 
+        sf::Font _font;
         sf::Event _event;
         std::shared_ptr<sf::RenderWindow> _window;
+        std::vector<sf::Text> _x;
 
-        std::vector<std::pair<sf::VertexArray, truc_t *>> _object;
+        std::vector<Object> _object;
 
         std::vector<sf::Sprite> _sprites;
         std::vector<std::shared_ptr<sf::Texture>> _textures;
+        std::vector<std::shared_ptr<sf::SoundBuffer>> _soundBuffers;
         std::vector<std::pair<sf::Sprite, sf::Sprite>> _portails;
         std::vector<std::shared_ptr<sf::Texture>> _textures_portaux;
 };

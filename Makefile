@@ -26,10 +26,11 @@ SRC		          		= 	src/main.cpp 									\
 							src/algo.cpp 									\
 							src/display/Display.cpp 						\
 							src/display/Ui.cpp 								\
+							src/display/Object.cpp 							\
 
 OBJ          			= 	$(SRC:%.cpp=obj/%.o)
 
-LIBSFML_FLAGS 			= 	-lsfml-graphics -lsfml-window -lsfml-system
+LIBSFML_FLAGS 			= 	-lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
 RED    = \033[1;31m
 GREEN  = \033[1;32m
