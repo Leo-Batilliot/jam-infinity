@@ -28,6 +28,11 @@ Object::Object(Ui &ui, sf::Font &font, int i)
     _level.setCharacterSize(30);
     _level.setFillColor(sf::Color(0, 0, 0, 255));
     _level.setPosition(30, 910 - (i * 85));
+    _price = sf::Text();
+    _price.setFont(font);
+    _price.setCharacterSize(20);
+    _price.setFillColor(sf::Color(0, 0, 0, 255));
+    _price.setPosition(30, 950 - (i * 85));
     _mult = sf::Text();
     _mult.setFont(font);
     _mult.setCharacterSize(30);
@@ -44,6 +49,11 @@ void Object::setTextLevel(const std::string &str)
     _level.setString(str);
 }
 
+void Object::setTextPrice(const std::string &str)
+{
+    _price.setString(str);
+}
+
 void Object::setTextMult(const std::string &str)
 {
     _mult.setString(str);
@@ -57,6 +67,11 @@ sf::Text Object::getMult()
 sf::Text Object::getLevel()
 {
     return _level;
+}
+
+sf::Text Object::getPrice()
+{
+    return _price;
 }
 
 sf::VertexArray Object::getButton()

@@ -43,5 +43,5 @@ int main(void)
     algo(main_struct);
     linked_list_destroy(main_struct->head);
     free(main_struct);
-    return 84;
+    return 0;
 }
