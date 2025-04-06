@@ -21,6 +21,7 @@ class Object {
         void setTextPrice(const std::string &str);
         void setTextMult(const std::string &str);
         void setObject(truc_t *object);
+        void setButton(sf::VertexArray button);
 
         sf::Text getMult();
         sf::Text getLevel();

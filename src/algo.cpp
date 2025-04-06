@@ -35,7 +35,7 @@ void algo(infinity_t *main_struct)
         node->pos += node->speed;
         if (node->pos >= 100 && node->level <= 100) {
             node->pos = 0;
-            node->coeff += 0.01;
+            node->coeff += 0.01 * (node->legacy * 2) - 0.01;
             main_struct->money_tot += get_cur_money(main_struct);
             last_state = node->state;
             node->state = node->level / 10;
