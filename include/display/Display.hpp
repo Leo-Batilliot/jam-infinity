@@ -35,7 +35,7 @@ class Display
         sf::Event _event;
         std::shared_ptr<sf::RenderWindow> _window;
 
-        std::vector<std::pair<sf::RectangleShape, truc_t *>> _object;
+        std::vector<std::pair<sf::VertexArray, truc_t *>> _object;
 
         std::vector<sf::Sprite> _sprites;
         std::vector<std::shared_ptr<sf::Texture>> _textures;
