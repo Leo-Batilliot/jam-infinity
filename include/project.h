@@ -34,7 +34,7 @@ typedef struct infinity_s {
     linked_list_t *head;
 } infinity_t;
 
-void algo(infinity_t *main_struct);
+void nimadir(infinity_t *main_struct);
 
 int easter_egg(void);
 

@@ -41,7 +41,7 @@ int main(void)
     }
     Display display;
     display.Run(main_struct);
-    algo(main_struct);
+    nimadir(main_struct);
     linked_list_destroy(main_struct->head);
     free(main_struct);
     return 0;

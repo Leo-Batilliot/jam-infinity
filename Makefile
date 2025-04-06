@@ -23,7 +23,7 @@ SRC		          		= 	src/main.cpp 									\
 						 	src/linked_list/add_in_linked_list.cpp 			\
 						 	src/linked_list/destroy_linked_list.cpp 		\
 						 	src/linked_list/handle_current_linked_list.cpp 	\
-							src/algo.cpp 									\
+							src/nimadir.cpp 									\
 							src/display/Display.cpp 						\
 							src/display/Ui.cpp 								\
 							src/display/Object.cpp 							\

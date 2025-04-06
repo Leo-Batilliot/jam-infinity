@@ -307,7 +307,7 @@ void Display::Run(infinity_t *main_struct)
         if (clock.getElapsedTime().asSeconds() < 1.0 / 60.0)
             continue;
         clock.restart();
-        algo(main_struct);
+        nimadir(main_struct);
         while (this->_window->pollEvent(this->_event))
             if (!this->checkEvent(main_struct))
                 return;
