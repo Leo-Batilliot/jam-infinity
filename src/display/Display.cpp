@@ -153,6 +153,11 @@ std::vector<std::pair<sf::Sprite, sf::Sprite>> Display::initSpritePortaux(std::v
     return portails;
 }
 
+int getPrice(int index, int level, int prestige)
+{
+    return pow(5, index + 1) * pow(1.05, level) * pow(2, prestige);
+}
+
 void Display::drawObject(infinity_t *main_struct)
 {
     int index = 0;
@@ -162,6 +167,7 @@ void Display::drawObject(infinity_t *main_struct)
         truc_t *node = (truc_t *)linked_list_get_data(main_struct->head);
         _sprites[index].setPosition({170 + node->pos * 14, _sprites[index].getPosition().y});
         _object[index].setTextLevel(std::to_string(node->level));
+        _object[index].setTextPrice(std::to_string(getPrice(index, node->level, 0)));
         std::ostringstream oss;
         oss << std::fixed << std::setprecision(2) << node->coeff;
         _object[index].setTextMult(oss.str());
@@ -200,10 +206,12 @@ void Display::drawObject(infinity_t *main_struct)
             this->_window->draw(_portails[i].second);
             this->_window->draw(_object[i].getButton());
             this->_window->draw(_object[i].getLevel());
+            this->_window->draw(_object[i].getPrice());
         }
         else if (main_struct->is_buy + 1 >= i) {
             this->_window->draw(_object[i].getButton());
             this->_window->draw(_object[i].getLevel());
+            this->_window->draw(_object[i].getPrice());
         }
     }
     this->_window->display();
@@ -213,12 +221,7 @@ void Display::drawObject(infinity_t *main_struct)
     }
 }
 
-int get_price(int index, int level, int prestige)
-{
-    return pow(5, index + 1) * pow(1.05, level) * pow(2, prestige);
-}
-
-float get_speed(int index, int level)
+float getSpeed(int index, int level)
 {
     float limit[] = {70.0, 50.0, 40.0, 30.0, 25.0, 20.0, 15.0, 10.0, 5.0};
     float a = 0.2f;
@@ -231,15 +234,19 @@ void Display::checkButton(infinity_t *main_struct)
     for (int i = 0; i < 9; i++) {
         auto button = _object[i].getButton();
         if (button.getBounds().contains(this->_event.mouseButton.x, this->_event.mouseButton.y)) {
-            if (i <= main_struct->is_buy) {
-                _ui.changeColor(button, sf::Color(0, 255, 0, 255));
-                _object[i].getObject()->level++;
-            } else if (i == main_struct->is_buy + 1) {
-                main_struct->is_buy++;
-                _object[i].getObject()->level++;
-                _ui.changeColor(button, sf::Color(0, 255, 0, 255));
+            float price = std::atof(_object[i].getPrice().getString().toAnsiString().c_str());
+            if (main_struct->money_tot >= price) {
+                if (i <= main_struct->is_buy) {
+                    _ui.changeColor(button, sf::Color(0, 255, 0, 255));
+                    _object[i].getObject()->level++;
+                } else if (i == main_struct->is_buy + 1) {
+                    main_struct->is_buy++;
+                    _object[i].getObject()->level++;
+                    _ui.changeColor(button, sf::Color(0, 255, 0, 255));
+                }
+                main_struct->money_tot -= price;
             }
-            _object[i].getObject()->speed = get_speed(_object[i].getObject()->index, _object[i].getObject()->level);
+            _object[i].getObject()->speed = getSpeed(_object[i].getObject()->index, _object[i].getObject()->level);
         }
         linked_list_next(main_struct->head);
     }
@@ -257,11 +264,9 @@ bool Display::checkEvent(infinity_t *main_struct)
     if (this->_event.type == sf::Event::Closed ||
         (this->_event.type == sf::Event::KeyPressed && this->_event.key.code == sf::Keyboard::Escape))
         return false;
-    if (this->_event.type == sf::Event::MouseButtonPressed) {
-        if (this->_event.mouseButton.button == sf::Mouse::Left) {
+    if (this->_event.type == sf::Event::MouseButtonPressed)
+        if (this->_event.mouseButton.button == sf::Mouse::Left)
             checkButton(main_struct);
-        }
-    }
     return true;
 }
 
@@ -273,7 +278,6 @@ void Display::Run(infinity_t *main_struct)
         truc_t *node = (truc_t *)linked_list_get_data(main_struct->head);
         _object[node->index - 1].setObject(node);
     } while (linked_list_next(main_struct->head));
-
     while (_window->isOpen()) {
         if (clock.getElapsedTime().asSeconds() < 1.0 / 60.0)
             continue;

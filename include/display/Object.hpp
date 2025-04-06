@@ -18,16 +18,19 @@ class Object {
         ~Object();
 
         void setTextLevel(const std::string &str);
+        void setTextPrice(const std::string &str);
         void setTextMult(const std::string &str);
         void setObject(truc_t *object);
 
         sf::Text getMult();
         sf::Text getLevel();
+        sf::Text getPrice();
         sf::VertexArray getButton();
         truc_t *getObject();
     private:
         sf::VertexArray _button;
         sf::Text _mult;
         sf::Text _level;
+        sf::Text _price;
         truc_t *_object;
 };
