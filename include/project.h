@@ -23,6 +23,8 @@ typedef struct truc_s {
     int index;
     float speed;
     int level;
+    int state;
+    bool state_change;
 } truc_t;
 
 typedef struct infinity_s {

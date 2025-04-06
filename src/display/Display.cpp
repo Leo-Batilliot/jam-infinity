@@ -148,6 +148,10 @@ void Display::drawObject(infinity_t *main_struct)
         _sprites[index].setPosition({170 + node->pos * 14, _sprites[index].getPosition().y});
         _object[index].setTextLevel(std::to_string(node->level));
         _object[index].setTextMult(std::to_string(node->coeff));
+        if (node->state_change) {
+            _sprites[index].setTexture(*_textures[node->state].get());
+            node->state_change = false;
+        }
         index++;
         if (node->pos == 0) {
             std::thread([](std::shared_ptr<sf::SoundBuffer> buffer) {
@@ -156,16 +160,15 @@ void Display::drawObject(infinity_t *main_struct)
                 sound.play();
                 while (sound.getStatus() == sf::Sound::Playing)
                     sf::sleep(sf::milliseconds(200));
-            }, this->_soundBuffers[4]).detach();
+            }, this->_soundBuffers[node->state]).detach();
         }
     } while (linked_list_next(main_struct->head));
 
     this->_window->draw(this->_ui.getBackground());
     this->_window->draw(this->_ui.getTopBackground());
     for (int i = 0; i < 9; i++) {
-        if (i <= 8 && i > 0) {
+        if (i <= 8 && i > 0)
             this->_window->draw(_x[i - 1]);
-        }
         this->_window->draw(_object[i].getMult());
         if (main_struct->is_buy >= i) {
             this->_window->draw(_sprites[i]);

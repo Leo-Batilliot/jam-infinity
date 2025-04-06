@@ -34,6 +34,8 @@ int main(void)
         node->speed = 1;
         node->index = i + 1;
         node->pos = 1;
+        node->state = 0;
+        node->state_change = false;
         linked_list_add(main_struct->head, node, free);
     }
     Display display;
