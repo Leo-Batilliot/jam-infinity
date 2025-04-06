@@ -5,6 +5,9 @@
 ** Display.cpp
 */
 
+#include <thread>
+#include <chrono>
+
 #include "Ui.hpp"
 #include "project.h"
 #include "Display.hpp"
@@ -18,6 +21,7 @@ Display::Display()
     this->_ui = Ui();
 
     this->_textures = initTextureObject();
+    this->_soundBuffers = initSoundBuffer();
     this->_textures_portaux = initTexturePortaux();
     this->_sprites = initSprite(this->_textures[0]);
     this->_portails = initSpritePortaux(this->_textures_portaux);
@@ -89,6 +93,23 @@ std::vector<sf::Sprite> Display::initSprite(std::shared_ptr<sf::Texture> texture
     return sprites;
 }
 
+std::vector<std::shared_ptr<sf::SoundBuffer>> Display::initSoundBuffer()
+{
+    std::vector<std::shared_ptr<sf::SoundBuffer>> soundBuffers(8);
+    for (auto& tex : soundBuffers)
+        tex = std::make_shared<sf::SoundBuffer>();
+
+    soundBuffers[0]->loadFromFile("assets/audio/Schnecke.wav");
+    soundBuffers[1]->loadFromFile("assets/audio/Schrittgeräusch.wav");
+    soundBuffers[2]->loadFromFile("assets/audio/Hund.wav");
+    soundBuffers[3]->loadFromFile("assets/audio/Radfahrer.wav");
+    soundBuffers[4]->loadFromFile("assets/audio/Auto.wav");
+    soundBuffers[5]->loadFromFile("assets/audio/Zug.wav");
+    soundBuffers[6]->loadFromFile("assets/audio/Flugzeug.wav");
+    soundBuffers[7]->loadFromFile("assets/audio/Phönix.wav");
+    return soundBuffers;
+}
+
 std::vector<std::pair<sf::Sprite, sf::Sprite>> Display::initSpritePortaux(std::vector<std::shared_ptr<sf::Texture>> texture_portaux)
 {
     std::vector<sf::Sprite> portails_left(9);
@@ -119,6 +140,15 @@ void Display::drawObject(infinity_t *main_struct)
         truc_t *node = (truc_t *)linked_list_get_data(main_struct->head);
         _sprites[index].setPosition({170 + node->pos * 14, _sprites[index].getPosition().y});
         index++;
+        if (node->pos == 0) {
+            std::thread([](std::shared_ptr<sf::SoundBuffer> buffer) {
+                sf::Sound sound;
+                sound.setBuffer(*buffer);
+                sound.play();
+                while (sound.getStatus() == sf::Sound::Playing)
+                    sf::sleep(sf::milliseconds(200));
+            }, this->_soundBuffers[4]).detach();
+        }
     } while (linked_list_next(main_struct->head));
 
     this->_window->draw(this->_ui.getBackground());
