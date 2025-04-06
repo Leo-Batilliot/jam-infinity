@@ -8,9 +8,11 @@
 #pragma once
 
 #include <memory>
-#include "project.h"
-#include "Ui.hpp"
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
+
+#include "Ui.hpp"
+#include "project.h"
 
 class Display
 {
