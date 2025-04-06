@@ -33,4 +33,6 @@ typedef struct infinity_s {
 
 void algo(infinity_t *main_struct);
 
+int easter_egg(void);
+
 #endif /* !MY_H_ */

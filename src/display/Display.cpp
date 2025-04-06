@@ -42,6 +42,9 @@ Display::Display()
         this->_x[i].setPosition(250 + i * 200, 50);
         this->_x[i].setString("x");
     }
+    _hiddenButton = sf::RectangleShape();
+    _hiddenButton.setSize(sf::Vector2f(100, 100));
+    _hiddenButton.setPosition(800, 980);
 }
 
 Display::~Display()
@@ -228,6 +231,13 @@ void Display::checkButton(infinity_t *main_struct)
         }
         linked_list_next(main_struct->head);
     }
+    int result = 0;
+    for (int i = 0; i < 9; i++) {
+        auto object = _object[i].getObject();
+        result += object->coeff;
+    }
+    if (this->_hiddenButton.getGlobalBounds().contains(this->_event.mouseButton.x, this->_event.mouseButton.y) && result >= 15)
+        easter_egg();
 }
 
 bool Display::checkEvent(infinity_t *main_struct)

@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "stddef.h": "c",
-        "linked_list.h": "c",
-        "project.h": "c",
-        "random": "cpp"
-    }
-}
