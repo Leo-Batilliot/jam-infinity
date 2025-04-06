@@ -16,23 +16,37 @@ long get_time_in_ms(struct timeval *start_time)
     return (current_time.tv_sec - start_time->tv_sec) * 1000 + (current_time.tv_usec - start_time->tv_usec) / 1000;
 }
 
+float get_cur_money(infinity_t *main_struct)
+{
+    int j = 0;
+    float cur = 1;
+
+    do {
+        truc_t *tmp_node = (truc_t *)linked_list_get_data(main_struct->head);
+        cur *= tmp_node->coeff;
+        j++;
+    } while (linked_list_next(main_struct->head) && j < main_struct->is_buy);
+    linked_list_set_to_start(main_struct->head);
+    return cur;
+}
+
 void algo(infinity_t *main_struct)
 {
+    int i = 0;
+    float t = 0.0;
+
     do {
         truc_t *node = (truc_t *)linked_list_get_data(main_struct->head);
-        long elapsed = get_time_in_ms(&node->timer);
-        float elapsed_seconds = (float)elapsed / 1000.0;
-        node->pos = ((float)elapsed / (float)(node->start * 1000)) * 100;
 
-        if (elapsed_seconds >= node->start) {
-            main_struct->money_tot = 1;
-            // récupérer value des coeffs coté front
-            gettimeofday(&node->timer, NULL);
-            do {
-                truc_t *tmp = (truc_t *)linked_list_get_data(main_struct->head);
-                main_struct->money_tot *= tmp->coeff;
-            } while (linked_list_next(main_struct->head));
+        node->pos += node->speed;
+        if (node->pos >= 100 && node->level < 100) {
+            node->pos = 0;
+            t = (float)node->level / 100.0f;
+            node->speed = 1.0f + (9 - node->index) * (t * 0.5f + t * t * 0.5f);
+            node->coeff += 0.01;
+            main_struct->money_tot += get_cur_money(main_struct);
         }
-    } while (linked_list_next(main_struct->head));
-    printf("%f\n", main_struct->money_tot);
+        i++;
+    } while (linked_list_next(main_struct->head) && i <= main_struct->is_buy);
+    linked_list_set_to_start(main_struct->head);
 }

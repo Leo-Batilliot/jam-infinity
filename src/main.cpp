@@ -21,6 +21,7 @@ int main(void)
     if (!main_struct)
         return 84;
     main_struct->head = linked_list_create();
+    main_struct->is_buy = 0;
     if (!main_struct->head)
         return 84;
     main_struct->money_tot = 0;
@@ -29,9 +30,9 @@ int main(void)
         if (!node)
             return 84;
         node->coeff = 1;
+        node->level = 1;
+        node->speed = 1;
         node->index = i + 1;
-        node->start = 10 * node->index;
-        gettimeofday(&node->timer, NULL);
         node->pos = 1;
         linked_list_add(main_struct->head, node, free);
     }
