@@ -8,7 +8,7 @@
 #include "Ui.hpp"
 #include "project.h"
 #include "Display.hpp"
-
+#include <cmath>
 
 Display::Display()
     :_window(nullptr)
@@ -156,6 +156,19 @@ void Display::drawObject(infinity_t *main_struct)
     }
 }
 
+int get_price(int index, int level, int prestige)
+{
+    return pow(5, index + 1) * pow(1.05, level) * pow(2, prestige);
+}
+
+float get_speed(int index, int level)
+{
+    float limit[] = {70.0, 50.0, 40.0, 30.0, 25.0, 20.0, 15.0, 10.0, 5.0};
+    float a = 0.2f;
+    float growth = 1.0f - 1.0f / pow(level + 1.0f, a);
+    return (1.0f / (index + 1) + (limit[index] / 10.0f) * growth);
+}
+
 void Display::checkButton(infinity_t *main_struct)
 {
     for (int i = 0; i < 9; i++) {
@@ -169,8 +182,10 @@ void Display::checkButton(infinity_t *main_struct)
                 main_struct->is_buy++;
                 _object[i].getObject()->level++;
                 _ui.changeColor(button, sf::Color(0, 255, 0, 255));
+                _object[i].getObject()->speed = get_speed(_object[i].getObject()->index, _object[i].getObject()->level);
             }
         }
+        linked_list_next(main_struct->head);
     }
 }
 
