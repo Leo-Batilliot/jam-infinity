@@ -17,7 +17,8 @@ Object::Object(Ui &ui, sf::Font &font, int i)
         sf::Color(57, 255, 255),
         sf::Color(27, 30, 219),
         sf::Color(150, 31, 122),
-        sf::Color(233, 31, 220)
+        sf::Color(233, 31, 220),
+        sf::Color(255, 255, 255)
     };
     _button = ui.createRoundedRectangle(sf::Vector2f(10, 910 - (i * 85)),
         sf::Vector2f(130, 80), 20, colors[i], 8);
