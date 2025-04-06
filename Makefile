@@ -27,10 +27,12 @@ SRC		          		= 	src/main.cpp 									\
 							src/display/Display.cpp 						\
 							src/display/Ui.cpp 								\
 							src/display/Object.cpp 							\
+							src/easter-egg.cpp 								\
 
 OBJ          			= 	$(SRC:%.cpp=obj/%.o)
 
 LIBSFML_FLAGS 			= 	-lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
+NCURSES_FLAGS 		= 	-lncurses
 
 RED    = \033[1;31m
 GREEN  = \033[1;32m
@@ -49,7 +51,7 @@ obj/%.o: %.cpp | obj
 
 $(NAME): $(OBJ)
 	@echo -e "$(BLUE)Linking $(NAME)...$(NC)"
-	@$(CC) $^ -o $(NAME) $(LIBSFML_FLAGS) $(CFLAGS) $(INCLUDE_FLAGS)
+	@$(CC) $^ -o $(NAME) $(LIBSFML_FLAGS) $(NCURSES_FLAGS) $(CFLAGS) $(INCLUDE_FLAGS)
 
 unit_test: $(TEST_OBJ)
 	@echo -e "$(BLUE)Compiling unit tests...$(NC)"
