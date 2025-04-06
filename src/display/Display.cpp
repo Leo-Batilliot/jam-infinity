@@ -220,9 +220,13 @@ void Display::checkButton(infinity_t *main_struct)
         }
         linked_list_next(main_struct->head);
     }
-    if (this->_hiddenButton.getGlobalBounds().contains(this->_event.mouseButton.x, this->_event.mouseButton.y)) {
-        easter_egg();
+    int result = 0;
+    for (int i = 0; i < 9; i++) {
+        auto object = _object[i].getObject();
+        result += object->coeff;
     }
+    if (this->_hiddenButton.getGlobalBounds().contains(this->_event.mouseButton.x, this->_event.mouseButton.y) && result >= 15)
+        easter_egg();
 }
 
 bool Display::checkEvent(infinity_t *main_struct)

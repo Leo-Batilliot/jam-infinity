@@ -14,8 +14,8 @@ int easter_egg(void)
     WINDOW *fenster;
     int hoehe = 10;
     int breite = 40;
-    std::string easter_egg = "TOLL! DU HAST DAS EASTER EGG GEFUNDEN!";
-    std::string easter_egg2 = "Drücke eine Taste zum Beenden    ";
+    std::string easter_egg = "GREAT! YOU FOUND THE EASTER EGG!";
+    std::string easter_egg2 = "Press any key to exit    ";
     auto nachricht1 = easter_egg.c_str();
     auto nachricht2 = easter_egg2.c_str();
 
