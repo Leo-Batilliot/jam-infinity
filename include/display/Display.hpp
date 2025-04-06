@@ -38,6 +38,7 @@ class Display
 
         sf::Font _font;
         sf::Event _event;
+        sf::RectangleShape _hiddenButton;
         std::shared_ptr<sf::RenderWindow> _window;
         std::vector<sf::Text> _x;
 
