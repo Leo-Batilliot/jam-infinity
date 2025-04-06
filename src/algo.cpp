@@ -8,14 +8,6 @@
 #include "linked_list.h"
 #include "project.h"
 
-long get_time_in_ms(struct timeval *start_time) 
-{
-    struct timeval current_time;
-
-    gettimeofday(&current_time, NULL);
-    return (current_time.tv_sec - start_time->tv_sec) * 1000 + (current_time.tv_usec - start_time->tv_usec) / 1000;
-}
-
 float get_cur_money(infinity_t *main_struct)
 {
     int j = 0;
@@ -33,16 +25,13 @@ float get_cur_money(infinity_t *main_struct)
 void algo(infinity_t *main_struct)
 {
     int i = 0;
-    float t = 0.0;
 
     do {
         truc_t *node = (truc_t *)linked_list_get_data(main_struct->head);
 
         node->pos += node->speed;
-        if (node->pos >= 100 && node->level < 100) {
+        if (node->pos >= 100 && node->level <= 100) {
             node->pos = 0;
-            t = (float)node->level / 100.0f;
-            node->speed = 1.0f + (9 - node->index) * (t * 0.5f + t * t * 0.5f);
             node->coeff += 0.01;
             main_struct->money_tot += get_cur_money(main_struct);
         }

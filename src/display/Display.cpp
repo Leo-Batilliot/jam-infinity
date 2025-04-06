@@ -8,6 +8,7 @@
 #include "Ui.hpp"
 #include "project.h"
 #include "Display.hpp"
+#include <cmath>
 
 Display::Display()
     :_window(nullptr)
@@ -134,20 +135,36 @@ void Display::drawObject(infinity_t *main_struct)
     }
 }
 
+int get_price(int index, int level, int prestige)
+{
+    // valeur de depart * (un multiplicateur exponentiel) * (multiplicateur exponentiel pour le prestige)
+    return pow(5, index + 1) * pow(1.05, level) * pow(2, prestige);
+}
+
+float get_speed(int index, int level)
+{
+    // valeur max de vitesse en fonction de l'index
+    float limit[] = {70.0, 50.0, 40.0, 30.0, 25.0, 20.0, 15.0, 10.0, 5.0};
+    // vitesse de la montée en vitesse par niveau
+    float a = 0.2f;
+    // mutiplicateur entre 0 et 1 croissant en fonction du niveau en fonction de a
+    float growth = 1.0f - 1.0f / pow(level + 1.0f, a);
+    // valeur de base + vitesse max * un multiplicateur entre 0 et 1
+    return (1.0f / (index + 1) + (limit[index] / 10.0f) * growth);
+}
+
 void Display::checkButton(infinity_t *main_struct)
 {
     for (int i = 0; i < 9; i++) {
+        truc_t *node = (truc_t *)linked_list_get_data(main_struct->head);
         if (_object[i].first.getBounds().contains(this->_event.mouseButton.x, this->_event.mouseButton.y)) {
-            if (i <= main_struct->is_buy) {
-                _ui.changeColor(_object[i].first, sf::Color(0, 255, 0, 255));
-                _object[i].second->level++;
-            }
-            else if (i == main_struct->is_buy + 1) {
+            if (i == main_struct->is_buy + 1)
                 main_struct->is_buy++;
-                _object[i].second->level++;
-                _ui.changeColor(_object[i].first, sf::Color(0, 255, 0, 255));
-            }
+            _object[i].second->level++;
+            _ui.changeColor(_object[i].first, sf::Color(0, 255, 0, 255));
+            node->speed = get_speed(node->index, node->level);
         }
+        linked_list_next(main_struct->head);
     }
 }
 
