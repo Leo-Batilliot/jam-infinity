@@ -9,6 +9,7 @@
 #include "project.h"
 #include "Display.hpp"
 
+
 Display::Display()
     :_window(nullptr)
 {
@@ -16,25 +17,22 @@ Display::Display()
     this->_window->setFramerateLimit(60);
     this->_ui = Ui();
     this->_font.loadFromFile("assets/Monocraft.ttf");
-
     this->_textures = initTextureObject();
     this->_textures_portaux = initTexturePortaux();
     this->_sprites = initSprite(this->_textures[0]);
     this->_portails = initSpritePortaux(this->_textures_portaux);
 
-    this->_object = std::vector<std::pair<std::pair<sf::VertexArray, std::vector<sf::Text>>, truc_t *>>(9);
     for (int i = 0; i < 9; i++) {
-        this->_object[i].first.first = this->_ui.createRoundedRectangle(
-            sf::Vector2f(10, 910 - (i * 85)), sf::Vector2f(130, 80), 20,
-            sf::Color(128, 163, 163, 255), 8);
-        this->_object[i].first.second = std::vector<sf::Text>(2);
-        this->_object[i].first.second[0] = sf::Text();
-        this->_object[i].first.second[0].setFont(this->_font);
-        this->_object[i].first.second[0].setCharacterSize(30);
-        this->_object[i].first.second[0].setFillColor(sf::Color(255, 255, 255, 255));
-        this->_object[i].first.second[0].setPosition(30, 910 - (i * 85));
-        
-        this->_object[i].second = nullptr;
+        Object obj(this->_ui, this->_font, i);
+        this->_object.push_back(obj);
+    }
+    this->_x = std::vector<sf::Text>(8);
+    for (int i = 0; i <= 7; i++) {
+        this->_x[i].setFont(this->_font);
+        this->_x[i].setCharacterSize(30);
+        this->_x[i].setFillColor(sf::Color(255, 255, 255, 255));
+        this->_x[i].setPosition(250 + i * 200, 50);
+        this->_x[i].setString("x");
     }
 }
 
@@ -82,16 +80,18 @@ std::vector<sf::Sprite> Display::initSprite(std::shared_ptr<sf::Texture> texture
         sf::Color(57, 255, 255),
         sf::Color(27, 30, 219),
         sf::Color(150, 31, 122),
-        sf::Color(233, 31, 220)
+        sf::Color(233, 31, 220),
+        sf::Color(255, 255, 255)
     };
     sprites[0].setTexture(texture.get()[0]);
     sprites[0].setPosition({170, 910});
     sprites[0].scale({0.09, 0.09});
+    sprites[0].setColor(colors[0]);
     for (int i = 1; i < 9; i++) {
         sprites[i].setTexture(texture.get()[0]);
         sprites[i].scale({0.09, 0.09});
         sprites[i].setPosition({170, sprites[i - 1].getPosition().y - 85});
-        sprites[i].setColor(colors[i - 1]);
+        sprites[i].setColor(colors[i]);
     }
     return sprites;
 }
@@ -125,43 +125,50 @@ void Display::drawObject(infinity_t *main_struct)
     do {
         truc_t *node = (truc_t *)linked_list_get_data(main_struct->head);
         _sprites[index].setPosition({170 + node->pos * 14, _sprites[index].getPosition().y});
-        _object[index].first.second.setString(std::to_string(node->level - 1));
+        _object[index].setTextLevel(std::to_string(node->level));
+        _object[index].setTextMult(std::to_string(node->coeff));
         index++;
     } while (linked_list_next(main_struct->head));
 
     this->_window->draw(this->_ui.getBackground());
     this->_window->draw(this->_ui.getTopBackground());
     for (int i = 0; i < 9; i++) {
+        if (i <= 8 && i > 0) {
+            this->_window->draw(_x[i - 1]);
+        }
+        this->_window->draw(_object[i].getMult());
         if (main_struct->is_buy >= i) {
             this->_window->draw(_sprites[i]);
             this->_window->draw(_portails[i].first);
             this->_window->draw(_portails[i].second);
-            this->_window->draw(_object[i].first.first);
-            this->_window->draw(_object[i].first.second);
+            this->_window->draw(_object[i].getButton());
+            this->_window->draw(_object[i].getLevel());
         }
         else if (main_struct->is_buy + 1 >= i) {
-            this->_window->draw(_object[i].first.first);
-            this->_window->draw(_object[i].first.second);
+            this->_window->draw(_object[i].getButton());
+            this->_window->draw(_object[i].getLevel());
         }
     }
     this->_window->display();
     for (int i = 0; i < 9; i++) {
-        _ui.changeColor(_object[i].first.first, sf::Color(128, 163, 163, 255));
+        auto button = _object[i].getButton();
+        _ui.changeColor(button, sf::Color(128, 163, 163, 255));
     }
 }
 
 void Display::checkButton(infinity_t *main_struct)
 {
     for (int i = 0; i < 9; i++) {
-        if (_object[i].first.first.getBounds().contains(this->_event.mouseButton.x, this->_event.mouseButton.y)) {
+        auto button = _object[i].getButton();
+        if (button.getBounds().contains(this->_event.mouseButton.x, this->_event.mouseButton.y)) {
             if (i <= main_struct->is_buy) {
-                _ui.changeColor(_object[i].first.first, sf::Color(0, 255, 0, 255));
-                _object[i].second->level++;
+                _ui.changeColor(button, sf::Color(0, 255, 0, 255));
+                _object[i].getObject()->level++;
             }
             else if (i == main_struct->is_buy + 1) {
                 main_struct->is_buy++;
-                _object[i].second->level++;
-                _ui.changeColor(_object[i].first.first, sf::Color(0, 255, 0, 255));
+                _object[i].getObject()->level++;
+                _ui.changeColor(button, sf::Color(0, 255, 0, 255));
             }
         }
     }
@@ -185,7 +192,7 @@ void Display::Run(infinity_t *main_struct)
 
     do {
         truc_t *node = (truc_t *)linked_list_get_data(main_struct->head);
-        _object[node->index - 1].second = node;
+        _object[node->index - 1].setObject(node);
     } while (linked_list_next(main_struct->head));
 
     while (_window->isOpen()) {

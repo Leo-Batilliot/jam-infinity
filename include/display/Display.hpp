@@ -11,6 +11,7 @@
 #include "project.h"
 #include "Ui.hpp"
 #include <SFML/Graphics.hpp>
+#include "Object.hpp"
 
 class Display
 {
@@ -35,8 +36,9 @@ class Display
         sf::Font _font;
         sf::Event _event;
         std::shared_ptr<sf::RenderWindow> _window;
+        std::vector<sf::Text> _x;
 
-        std::vector<std::pair<std::pair<sf::VertexArray, std::vector<sf::Text>>, truc_t *>> _object;
+        std::vector<Object> _object;
 
         std::vector<sf::Sprite> _sprites;
         std::vector<std::shared_ptr<sf::Texture>> _textures;

@@ -30,7 +30,10 @@ int main(void)
         if (!node)
             return 84;
         node->coeff = 1;
-        node->level = 1;
+        if (i == 0)
+            node->level = 1;
+        else
+            node->level = 0;
         node->speed = 1;
         node->index = i + 1;
         node->pos = 1;

@@ -26,6 +26,7 @@ SRC		          		= 	src/main.cpp 									\
 							src/algo.cpp 									\
 							src/display/Display.cpp 						\
 							src/display/Ui.cpp 								\
+							src/display/Object.cpp 							\
 
 OBJ          			= 	$(SRC:%.cpp=obj/%.o)
 
