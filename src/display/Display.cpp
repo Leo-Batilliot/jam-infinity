@@ -16,7 +16,13 @@
 Display::Display()
     :_window(nullptr)
 {
-    this->_window = std::make_shared<sf::RenderWindow>(sf::VideoMode(1920, 1080), "Infinity", sf::Style::Default);
+    sf::VideoMode mode(1920, 1080);
+    this->_window = std::make_shared<sf::RenderWindow>(mode, "Infinity", sf::Style::None);
+    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+    int x = (desktop.width - 1920) / 2;
+    int y = (desktop.height - 1080) / 2;
+    this->_window->setPosition(sf::Vector2i(x, y));
+
     this->_window->setFramerateLimit(60);
     this->_ui = Ui();
     this->_font.loadFromFile("assets/Monocraft.ttf");
@@ -244,7 +250,8 @@ void Display::checkButton(infinity_t *main_struct)
 
 bool Display::checkEvent(infinity_t *main_struct)
 {
-    if (this->_event.type == sf::Event::Closed)
+    if (this->_event.type == sf::Event::Closed ||
+        (this->_event.type == sf::Event::KeyPressed && this->_event.key.code == sf::Keyboard::Escape))
         return false;
     if (this->_event.type == sf::Event::MouseButtonPressed) {
         if (this->_event.mouseButton.button == sf::Mouse::Left) {
