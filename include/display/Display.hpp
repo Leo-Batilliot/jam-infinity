@@ -37,6 +37,7 @@ class Display
         Ui _ui;
 
         sf::Font _font;
+        sf::Text _money;
         sf::Event _event;
         std::shared_ptr<sf::RenderWindow> _window;
         std::vector<sf::Text> _x;

@@ -26,6 +26,10 @@ Display::Display()
     this->_sprites = initSprite(this->_textures[0]);
     this->_portails = initSpritePortaux(this->_textures_portaux);
 
+    _money.setFont(_font);
+    _money.setCharacterSize(30);
+    _money.setFillColor(sf::Color::White);
+    
     for (int i = 0; i < 9; i++) {
         Object obj(this->_ui, this->_font, i);
         this->_object.push_back(obj);
@@ -162,6 +166,13 @@ void Display::drawObject(infinity_t *main_struct)
 
     this->_window->draw(this->_ui.getBackground());
     this->_window->draw(this->_ui.getTopBackground());
+
+    _money.setString(std::to_string(static_cast<int>(main_struct->money_tot)));
+    sf::FloatRect bounds = _money.getLocalBounds();
+    _money.setOrigin(bounds.left + bounds.width / 2.f, bounds.top);
+    _money.setPosition(1920.f / 2.f, 125.f);
+    this->_window->draw(_money);
+
     for (int i = 0; i < 9; i++) {
         if (i <= 8 && i > 0) {
             this->_window->draw(_x[i - 1]);
