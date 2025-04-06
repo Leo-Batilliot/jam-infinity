@@ -12,6 +12,8 @@
 #include "project.h"
 #include "Display.hpp"
 #include <cmath>
+#include <sstream>
+#include <iomanip>
 
 Display::Display()
     :_window(nullptr)
@@ -33,7 +35,7 @@ Display::Display()
     this->_portails = initSpritePortaux(this->_textures_portaux);
 
     _money.setFont(_font);
-    _money.setCharacterSize(30);
+    _money.setCharacterSize(50);
     _money.setFillColor(sf::Color::White);
     
     for (int i = 0; i < 9; i++) {
@@ -45,7 +47,7 @@ Display::Display()
         this->_x[i].setFont(this->_font);
         this->_x[i].setCharacterSize(30);
         this->_x[i].setFillColor(sf::Color(255, 255, 255, 255));
-        this->_x[i].setPosition(250 + i * 200, 50);
+        this->_x[i].setPosition(258 + i * 200, 60);
         this->_x[i].setString("x");
     }
     _hiddenButton = sf::RectangleShape();
@@ -160,7 +162,9 @@ void Display::drawObject(infinity_t *main_struct)
         truc_t *node = (truc_t *)linked_list_get_data(main_struct->head);
         _sprites[index].setPosition({170 + node->pos * 14, _sprites[index].getPosition().y});
         _object[index].setTextLevel(std::to_string(node->level));
-        _object[index].setTextMult(std::to_string(node->coeff));
+        std::ostringstream oss;
+        oss << std::fixed << std::setprecision(2) << node->coeff;
+        _object[index].setTextMult(oss.str());
         if (node->state_change) {
             _sprites[index].setTexture(*_textures[node->state].get());
             node->state_change = false;
