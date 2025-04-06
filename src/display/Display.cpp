@@ -161,13 +161,26 @@ int getPrice(int index, int level, int prestige)
 void Display::drawObject(infinity_t *main_struct)
 {
     int index = 0;
-
+    std::vector<sf::Color> colors = {
+        sf::Color(175, 0, 0),
+        sf::Color(255, 165, 0),
+        sf::Color(255, 255, 0),
+        sf::Color(57, 255, 57),
+        sf::Color(57, 255, 255),
+        sf::Color(27, 30, 219),
+        sf::Color(150, 31, 122),
+        sf::Color(233, 31, 220),
+        sf::Color(255, 255, 255)
+    };
     this->_window->clear();
     do {
         truc_t *node = (truc_t *)linked_list_get_data(main_struct->head);
         _sprites[index].setPosition({170 + node->pos * 14, _sprites[index].getPosition().y});
-        _object[index].setTextLevel(std::to_string(node->level));
-        _object[index].setTextPrice(std::to_string(getPrice(index, node->level, 0)));
+        if (node->level <= 99)
+            _object[index].setTextLevel(std::to_string(node->level));
+        else 
+            _object[index].setTextLevel("Legacy");
+        _object[index].setTextPrice(std::to_string(getPrice(index, node->level, node->legacy)));
         std::ostringstream oss;
         oss << std::fixed << std::setprecision(2) << node->coeff;
         _object[index].setTextMult(oss.str());
@@ -189,13 +202,12 @@ void Display::drawObject(infinity_t *main_struct)
 
     this->_window->draw(this->_ui.getBackground());
     this->_window->draw(this->_ui.getTopBackground());
-
     _money.setString(std::to_string(static_cast<int>(main_struct->money_tot)));
     sf::FloatRect bounds = _money.getLocalBounds();
     _money.setOrigin(bounds.left + bounds.width / 2.f, bounds.top);
     _money.setPosition(1920.f / 2.f, 125.f);
     this->_window->draw(_money);
-
+    
     for (int i = 0; i < 9; i++) {
         if (i <= 8 && i > 0)
             this->_window->draw(_x[i - 1]);
@@ -204,21 +216,29 @@ void Display::drawObject(infinity_t *main_struct)
             this->_window->draw(_sprites[i]);
             this->_window->draw(_portails[i].first);
             this->_window->draw(_portails[i].second);
+            auto button = _object[i].getButton();
+            if (main_struct->money_tot >= std::atof(_object[i].getPrice().getString().toAnsiString().c_str()))
+                this->_ui.changeColor(button, colors[i]);
+            else
+                this->_ui.changeColor(button, sf::Color(128, 163, 163, 255));
+            _object[i].setButton(button);
             this->_window->draw(_object[i].getButton());
             this->_window->draw(_object[i].getLevel());
             this->_window->draw(_object[i].getPrice());
         }
         else if (main_struct->is_buy + 1 >= i) {
+            auto button = _object[i].getButton();
+            if (main_struct->money_tot >= std::atof(_object[i].getPrice().getString().toAnsiString().c_str()))
+                this->_ui.changeColor(button, colors[i]);
+            else
+                this->_ui.changeColor(button, sf::Color(128, 163, 163, 255));
+            _object[i].setButton(button);
             this->_window->draw(_object[i].getButton());
             this->_window->draw(_object[i].getLevel());
             this->_window->draw(_object[i].getPrice());
         }
     }
     this->_window->display();
-    for (int i = 0; i < 9; i++) {
-        auto button = _object[i].getButton();
-        _ui.changeColor(button, sf::Color(128, 163, 163, 255));
-    }
 }
 
 float getSpeed(int index, int level)
@@ -237,8 +257,13 @@ void Display::checkButton(infinity_t *main_struct)
             float price = std::atof(_object[i].getPrice().getString().toAnsiString().c_str());
             if (main_struct->money_tot >= price) {
                 if (i <= main_struct->is_buy) {
-                    _ui.changeColor(button, sf::Color(0, 255, 0, 255));
-                    _object[i].getObject()->level++;
+                    if (_object[i].getObject()->level < 100) {
+                        _ui.changeColor(button, sf::Color(0, 255, 0, 255));
+                        _object[i].getObject()->level++;
+                    } else {
+                        _object[i].getObject()->level = 0;
+                        _object[i].getObject()->legacy++;
+                    }
                 } else if (i == main_struct->is_buy + 1) {
                     main_struct->is_buy++;
                     _object[i].getObject()->level++;

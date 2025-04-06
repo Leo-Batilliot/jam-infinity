@@ -25,6 +25,7 @@ typedef struct truc_s {
     int level;
     int state;
     bool state_change;
+    int legacy;
 } truc_t;
 
 typedef struct infinity_s {

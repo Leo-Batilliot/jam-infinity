@@ -89,3 +89,8 @@ void Object::setObject(truc_t *object)
 {
     _object = object;
 }
+
+void Object::setButton(sf::VertexArray button)
+{
+    _button = button;
+}
