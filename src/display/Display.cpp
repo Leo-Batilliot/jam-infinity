@@ -5,14 +5,14 @@
 ** Display.cpp
 */
 
+#include "Ui.hpp"
 #include "project.h"
 #include "Display.hpp"
-#include "Ui.hpp"
 
 Display::Display()
     :_window(nullptr)
 {
-    this->_window = std::make_shared<sf::RenderWindow>(sf::VideoMode(1920, 1080), "Display", sf::Style::Default);
+    this->_window = std::make_shared<sf::RenderWindow>(sf::VideoMode(1920, 1080), "Infinity", sf::Style::Default);
     this->_window->setFramerateLimit(60);
     this->_ui = Ui();
 
@@ -22,9 +22,11 @@ Display::Display()
     this->_sprites = initSprite(this->_textures[0]);
     this->_portails = initSpritePortaux(this->_textures_portaux);
 
-    this->_object = std::vector<std::pair<sf::RectangleShape, infinity_t *>>(9);
+    this->_object = std::vector<std::pair<sf::VertexArray, truc_t *>>(9);
     for (int i = 0; i < 9; i++) {
-        this->_object[i].first = this->_ui.initSquare(sf::Vector2f(170, 910 - (i * 85)), sf::Color(0, 0, 0, 0), sf::Vector2f(100, 100));
+        this->_object[i].first = this->_ui.createRoundedRectangle(
+            sf::Vector2f(10, 910 - (i * 85)), sf::Vector2f(130, 80), 20,
+            sf::Color(128, 163, 163, 255), 8);
         this->_object[i].second = nullptr;
     }
 }
@@ -108,6 +110,8 @@ std::vector<std::pair<sf::Sprite, sf::Sprite>> Display::initSpritePortaux(std::v
 {
     std::vector<sf::Sprite> portails_left(9);
     std::vector<sf::Sprite> portails_right(9);
+    std::vector<std::pair<sf::Sprite, sf::Sprite>> portails(9);
+
     for (int i = 0; i < 9; i++) {
         portails_left[i].setTexture(texture_portaux[0].get()[0]);
         portails_left[i].scale({0.09, 0.09});
@@ -116,7 +120,6 @@ std::vector<std::pair<sf::Sprite, sf::Sprite>> Display::initSpritePortaux(std::v
         portails_right[i].scale({0.09, 0.09});
         portails_right[i].setPosition(1600.0, static_cast<float>(910 - (i * 85)));
     }
-    std::vector<std::pair<sf::Sprite, sf::Sprite>> portails(9);
     for (int i = 0; i < 9; i++) {
         portails[i].first = portails_left[i];
         portails[i].second = portails_right[i];
@@ -126,8 +129,9 @@ std::vector<std::pair<sf::Sprite, sf::Sprite>> Display::initSpritePortaux(std::v
 
 void Display::drawObject(infinity_t *main_struct)
 {
-    this->_window->clear();
     int index = 0;
+
+    this->_window->clear();
     do {
         truc_t *node = (truc_t *)linked_list_get_data(main_struct->head);
         _sprites[index].setPosition({170 + node->pos * 14, _sprites[index].getPosition().y});
@@ -143,15 +147,35 @@ void Display::drawObject(infinity_t *main_struct)
         this->_window->draw(_object[i].first);
     }
     this->_window->display();
+    for (int i = 0; i < 9; i++) {
+        _ui.changeColor(_object[i].first, sf::Color(128, 163, 163, 255));
+    }
 }
 
-bool Display::checkEvent()
+void Display::checkButton(infinity_t *main_struct)
+{
+    for (int i = 0; i < 9; i++) {
+        if (_object[i].first.getBounds().contains(this->_event.mouseButton.x, this->_event.mouseButton.y)) {
+            if (i <= main_struct->is_buy) {
+                _ui.changeColor(_object[i].first, sf::Color(0, 255, 0, 255));
+                _object[i].second->level++;
+            }
+            else if (i == main_struct->is_buy + 1) {
+                main_struct->is_buy++;
+                _object[i].second->level++;
+                _ui.changeColor(_object[i].first, sf::Color(0, 255, 0, 255));
+            }
+        }
+    }
+}
+
+bool Display::checkEvent(infinity_t *main_struct)
 {
     if (this->_event.type == sf::Event::Closed)
         return false;
     if (this->_event.type == sf::Event::MouseButtonPressed) {
         if (this->_event.mouseButton.button == sf::Mouse::Left) {
-            // quand je vais faire les clicks pour les bouttons 
+            checkButton(main_struct);
         }
     }
     return true;
@@ -163,16 +187,16 @@ void Display::Run(infinity_t *main_struct)
 
     do {
         truc_t *node = (truc_t *)linked_list_get_data(main_struct->head);
-        _object[node->index - 1].second = reinterpret_cast<infinity_t *>(node);
+        _object[node->index - 1].second = node;
     } while (linked_list_next(main_struct->head));
 
-    while (true) {
+    while (_window->isOpen()) {
         if (clock.getElapsedTime().asSeconds() < 1.0 / 60.0)
             continue;
         clock.restart();
         algo(main_struct);
         while (this->_window->pollEvent(this->_event))
-            if (!this->checkEvent())
+            if (!this->checkEvent(main_struct))
                 return;
         this->drawObject(main_struct);
     }

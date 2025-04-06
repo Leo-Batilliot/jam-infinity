@@ -26,6 +26,7 @@ float get_cur_money(infinity_t *main_struct)
         cur *= tmp_node->coeff;
         j++;
     } while (linked_list_next(main_struct->head) && j < main_struct->is_buy);
+    linked_list_set_to_start(main_struct->head);
     return cur;
 }
 
@@ -40,13 +41,12 @@ void algo(infinity_t *main_struct)
         node->pos += node->speed;
         if (node->pos >= 100 && node->level < 100) {
             node->pos = 0;
-            node->level += 2;
             t = (float)node->level / 100.0f;
             node->speed = 1.0f + (9 - node->index) * (t * 0.5f + t * t * 0.5f);
             node->coeff += 0.01;
             main_struct->money_tot += get_cur_money(main_struct);
         }
         i++;
-    } while (linked_list_next(main_struct->head) && i < main_struct->is_buy);
+    } while (linked_list_next(main_struct->head) && i <= main_struct->is_buy);
     linked_list_set_to_start(main_struct->head);
 }
