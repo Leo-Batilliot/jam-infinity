@@ -155,6 +155,10 @@ void Display::drawObject(infinity_t *main_struct)
         _sprites[index].setPosition({170 + node->pos * 14, _sprites[index].getPosition().y});
         _object[index].setTextLevel(std::to_string(node->level));
         _object[index].setTextMult(std::to_string(node->coeff));
+        if (node->state_change) {
+            _sprites[index].setTexture(*_textures[node->state].get());
+            node->state_change = false;
+        }
         index++;
         if (node->pos == 0) {
             std::thread([](std::shared_ptr<sf::SoundBuffer> buffer) {
@@ -163,7 +167,7 @@ void Display::drawObject(infinity_t *main_struct)
                 sound.play();
                 while (sound.getStatus() == sf::Sound::Playing)
                     sf::sleep(sf::milliseconds(200));
-            }, this->_soundBuffers[4]).detach();
+            }, this->_soundBuffers[node->state]).detach();
         }
     } while (linked_list_next(main_struct->head));
 
@@ -177,9 +181,8 @@ void Display::drawObject(infinity_t *main_struct)
     this->_window->draw(_money);
 
     for (int i = 0; i < 9; i++) {
-        if (i <= 8 && i > 0) {
+        if (i <= 8 && i > 0)
             this->_window->draw(_x[i - 1]);
-        }
         this->_window->draw(_object[i].getMult());
         if (main_struct->is_buy >= i) {
             this->_window->draw(_sprites[i]);
@@ -221,13 +224,12 @@ void Display::checkButton(infinity_t *main_struct)
             if (i <= main_struct->is_buy) {
                 _ui.changeColor(button, sf::Color(0, 255, 0, 255));
                 _object[i].getObject()->level++;
-            }
-            else if (i == main_struct->is_buy + 1) {
+            } else if (i == main_struct->is_buy + 1) {
                 main_struct->is_buy++;
                 _object[i].getObject()->level++;
                 _ui.changeColor(button, sf::Color(0, 255, 0, 255));
-                _object[i].getObject()->speed = get_speed(_object[i].getObject()->index, _object[i].getObject()->level);
             }
+            _object[i].getObject()->speed = get_speed(_object[i].getObject()->index, _object[i].getObject()->level);
         }
         linked_list_next(main_struct->head);
     }

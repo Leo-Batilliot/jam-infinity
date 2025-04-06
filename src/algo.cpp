@@ -25,6 +25,7 @@ float get_cur_money(infinity_t *main_struct)
 void algo(infinity_t *main_struct)
 {
     int i = 0;
+    int last_state = 0;
 
     do {
         truc_t *node = (truc_t *)linked_list_get_data(main_struct->head);
@@ -33,6 +34,11 @@ void algo(infinity_t *main_struct)
         if (node->pos >= 100 && node->level <= 100) {
             node->pos = 0;
             node->coeff += 0.01;
+            last_state = node->state;
+            node->state = node->level / 10;
+            node->state = node->state > 7 ? 7 : node->state;
+            if (last_state != node->state)
+                node->state_change = true;
             main_struct->money_tot += get_cur_money(main_struct);
         }
         i++;
