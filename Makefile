@@ -25,10 +25,12 @@ SRC		          		= 	src/main.cpp 									\
 						 	src/linked_list/handle_current_linked_list.cpp 	\
 							src/algo.cpp 									\
 							src/display/Display.cpp 						\
+							src/display/Ui.cpp 								\
+							src/display/Object.cpp 							\
 
 OBJ          			= 	$(SRC:%.cpp=obj/%.o)
 
-LIBSFML_FLAGS 			= 	-lsfml-graphics -lsfml-window -lsfml-system
+LIBSFML_FLAGS 			= 	-lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
 RED    = \033[1;31m
 GREEN  = \033[1;32m
@@ -47,7 +49,7 @@ obj/%.o: %.cpp | obj
 
 $(NAME): $(OBJ)
 	@echo -e "$(BLUE)Linking $(NAME)...$(NC)"
-	@$(CC) $(LIBSFML_FLAGS) $(CFLAGS) $(INCLUDE_FLAGS) $^ -o $(NAME)
+	@$(CC) $^ -o $(NAME) $(LIBSFML_FLAGS) $(CFLAGS) $(INCLUDE_FLAGS)
 
 unit_test: $(TEST_OBJ)
 	@echo -e "$(BLUE)Compiling unit tests...$(NC)"
