@@ -16,6 +16,7 @@
     #include <sys/time.h>
     #include <stdlib.h>
     #include <stddef.h>
+    #include <atomic>
 
 typedef struct truc_s {
     float pos;
@@ -26,6 +27,8 @@ typedef struct truc_s {
     int state;
     bool state_change;
     int legacy;
+    std::atomic<bool> is_sound_playing;
+    bool is_restart;
 } truc_t;
 
 typedef struct infinity_s {

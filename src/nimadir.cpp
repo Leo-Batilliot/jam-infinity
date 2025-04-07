@@ -8,7 +8,7 @@
 // langue : Ouzbek
 
 #include "linked_list.h"
-#include "project.h"
+#include "project.hpp"
 
 float pulni_kur(infinity_t *asosiy_strukt)
 {
@@ -37,6 +37,7 @@ void nimadir(infinity_t *asosiy_strukt)
         tugun->pos += tugun->speed;
         if (tugun->pos >= 100 && tugun->level <= 100) {
             tugun->pos = 0;
+            tugun->is_restart = true;
             tugun->coeff += 0.01 * (tugun->legacy * 2) - 0.01;
             asosiy_strukt->money_tot += pulni_kur(asosiy_strukt);
             oxirgi_holat = tugun->state;
