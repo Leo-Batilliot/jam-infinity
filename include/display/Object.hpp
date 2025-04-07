@@ -8,7 +8,7 @@
 #pragma once
 
 #include <memory>
-#include "project.h"
+#include "project.hpp"
 #include "Ui.hpp"
 #include <SFML/Graphics.hpp>
 

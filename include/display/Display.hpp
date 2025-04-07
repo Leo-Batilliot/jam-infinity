@@ -13,7 +13,6 @@
 #include "Object.hpp"
 
 #include "Ui.hpp"
-#include "project.h"
 
 class Display
 {

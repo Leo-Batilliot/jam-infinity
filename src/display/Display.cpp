@@ -9,7 +9,6 @@
 #include <chrono>
 
 #include "Ui.hpp"
-#include "project.h"
 #include "Display.hpp"
 #include <cmath>
 #include <sstream>
@@ -189,14 +188,17 @@ void Display::drawObject(infinity_t *main_struct)
             node->state_change = false;
         }
         index++;
-        if (node->pos == 0) {
-            std::thread([](std::shared_ptr<sf::SoundBuffer> buffer) {
+        if (node->is_restart && !node->is_sound_playing) {
+            node->is_restart = false;
+            std::thread([](std::shared_ptr<sf::SoundBuffer> buffer, truc_t *node) {
+                node->is_sound_playing = true;
                 sf::Sound sound;
                 sound.setBuffer(*buffer);
                 sound.play();
                 while (sound.getStatus() == sf::Sound::Playing)
                     sf::sleep(sf::milliseconds(200));
-            }, this->_soundBuffers[node->state]).detach();
+                node->is_sound_playing = false;
+            }, this->_soundBuffers[node->state], node).detach();
         }
     } while (linked_list_next(main_struct->head));
 

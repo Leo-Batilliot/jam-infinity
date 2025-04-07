@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 
-#include "project.h"
+#include "project.hpp"
 #include "linked_list.h"
 
 #include "Display.hpp"
@@ -37,6 +37,8 @@ int main(void)
         node->pos = 1;
         node->state = 0;
         node->state_change = false;
+        node->is_sound_playing = false;
+        node->is_restart = false;
         linked_list_add(main_struct->head, node, free);
     }
     Display display;
